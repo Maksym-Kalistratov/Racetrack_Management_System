@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment variables (Crucial: Keep your DB passwords safe!)
+.env
+
+# Database files (We push the SQL scripts, not the live database)
+*.db
+*.sqlite
+*.sqlite3
+
+# WebStorm / IntelliJ project settings
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+
+package-lock.json
