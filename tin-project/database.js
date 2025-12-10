@@ -11,6 +11,18 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.log(`Connected to the SQLite database at ${dbPath}`);
 });
 
+const query = (sql, params = []) => {
+    return new Promise((resolve, reject) => {
+        db.all(sql, params, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+};
+
 function initializeDatabase() {
     const schemaPath = path.join(__dirname, 'sql', 'db_schema.sql');
     const seedPath = path.join(__dirname, 'sql', 'samle_data.sql');
@@ -62,5 +74,6 @@ function closeDatabase() {
 module.exports = {
     db,
     initializeDatabase,
-    closeDatabase
+    closeDatabase,
+    query
 };

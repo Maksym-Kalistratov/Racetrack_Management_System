@@ -7,17 +7,15 @@ const dbModule = require('./database');
 
 dbModule.initializeDatabase();
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/api", require("./routes/apiRouter"));
+
 app.get('/', (req, res) => {
-    res.send(`
-        <h1>Racetrack Management System</h1>
-        <p>Server is running successfully</p>
-    `);
+    res.sendFile(path.join(__dirname, "public", "html", "index.html"));
 });
 
 app.listen(port, () => {
