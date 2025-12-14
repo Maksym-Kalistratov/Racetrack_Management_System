@@ -1,3 +1,5 @@
+import {validateRace} from '/common/validation.js';
+
 const errorBox = document.getElementById('connection-error');
 
 const btnResults = document.getElementById('btn-results');
@@ -7,10 +9,16 @@ const btnRaces = document.getElementById('btn-races');
 const viewResults = document.getElementById('view-results');
 const viewDrivers = document.getElementById('view-drivers');
 const viewRaces = document.getElementById('view-races');
+const viewAddRace = document.getElementById('view-add-race');
 
 const tbodyResults = document.getElementById('tbody-results');
 const tbodyDrivers = document.getElementById('tbody-drivers');
 const tbodyRaces = document.getElementById('tbody-races');
+
+const btnOpenAddRace = document.getElementById('btn-open-add-race'); // Add New Race
+const btnCancelAdd = document.getElementById('btn-cancel-add');      // Cancel
+
+const formAddRace = document.getElementById('form-add-race');
 
 // Event Listeners
 
@@ -33,15 +41,31 @@ btnRaces.addEventListener('click', () => {
     loadData('/api/races', tbodyRaces, renderRacesRow);
 });
 
+if (btnOpenAddRace) {
+    btnOpenAddRace.addEventListener('click', () => {
+        switchView(viewAddRace);
+        displayError('');
+    });
+}
+
+if (btnCancelAdd) {
+    btnCancelAdd.addEventListener('click', () => {
+        switchView(viewRaces);
+        formAddRace.reset();
+        displayError('');
+    });
+}
 
 // Logic Functions
 
 function switchView(targetView) {
-    viewResults.style.display = 'none';
-    viewDrivers.style.display = 'none';
-    viewRaces.style.display = 'none';
+    const allViews = document.querySelectorAll('div[id^="view-"]');
 
-    targetView.style.display = 'block';
+    allViews.forEach(view => {
+        view.classList.add('hidden');
+    });
+
+    targetView.classList.remove('hidden');
 }
 
 async function loadData(url, tbodyElement, renderRowCallback) {
@@ -118,4 +142,50 @@ function renderRacesRow(row) {
         <td>${row.distance_km} km</td>
         <td>${row.weather_forecast || '-'}</td>
     `;
+}
+
+if (formAddRace) {
+    formAddRace.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const trackVal = document.getElementById('input-track').value;
+        const dateVal = document.getElementById('input-date').value;
+        const distVal = document.getElementById('input-distance').value;
+        const weatherVal = document.getElementById('input-weather').value;
+
+        const errors = validateRace(trackVal, dateVal, distVal, weatherVal);
+
+        if (errors.length > 0) {
+            displayError(errors.join('<br>'));
+            return;
+        }
+
+        const newRace = {
+            track_name: trackVal,
+            race_date: dateVal,
+            distance_km: distVal,
+            weather_forecast: weatherVal
+        };
+
+        try {
+            const response = await fetch('/api/races', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(newRace)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('Race added successfully!');
+                formAddRace.reset();
+                switchView(viewRaces);
+                await loadData('/api/races', tbodyRaces, renderRacesRow);
+            } else {
+                displayError(result.error || 'Failed to add race');
+            }
+        } catch (error) {
+            console.error(error);
+            displayError('Network Error');
+        }
+    });
 }

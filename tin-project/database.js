@@ -51,6 +51,14 @@ function getAllResults() {
     return query(sql);
 }
 
+function createRace(trackName, raceDate, distance, weather) {
+    const sql = `
+        INSERT INTO races (track_name, race_date, distance_km, weather_forecast) 
+        VALUES (?, ?, ?, ?)
+    `;
+    return run(sql, [trackName, raceDate, distance, weather]);
+}
+
 function initializeDatabase() {
     const schemaPath = path.join(__dirname, 'sql', 'db_schema.sql');
     const seedPath = path.join(__dirname, 'sql', 'sample_data.sql');
@@ -107,5 +115,6 @@ module.exports = {
     run,
     getAllDrivers,
     getAllRaces,
-    getAllResults
+    getAllResults,
+    createRace
 };

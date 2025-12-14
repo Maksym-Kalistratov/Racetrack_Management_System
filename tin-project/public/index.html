@@ -4,70 +4,97 @@
     <meta charset="UTF-8">
     <title>Racetrack Manager</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <script type="module" src="script.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <div id="connection-error" style="display: none;"></div>
+<h1>🏁 Racetrack Manager</h1>
 
-    <header>
-        <h1>🏁 Racetrack Manager</h1>
+<div id="connection-error" class="error-box hidden"></div>
 
-        <nav class="main-nav">
-            <button id="btn-results">🏆 Results</button>
-            <button id="btn-drivers">🏎️ Drivers</button>
-            <button id="btn-races">🌍 Races</button>
-        </nav>
-    </header>
+<nav>
+    <button id="btn-results">🏆 Results</button>
+    <button id="btn-drivers">🏎️ Drivers</button>
+    <button id="btn-races">🌍 Races</button>
+</nav>
 
-    <div id="view-results" class="view-section">
-        <h2>Race Results</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Track</th>
-                <th>Driver</th>
-                <th>Car</th>
-                <th>Pos</th>
-            </tr>
-            </thead>
-            <tbody id="tbody-results"></tbody>
-        </table>
-    </div>
+<hr>
 
-    <div id="view-drivers" class="view-section" style="display: none;">
-        <h2>Drivers List</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Nationality</th>
-                <th>License</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody id="tbody-drivers"></tbody>
-        </table>
-    </div>
-
-    <div id="view-races" class="view-section" style="display: none;">
-        <h2>Races Schedule</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Track</th>
-                <th>Date</th>
-                <th>Distance</th>
-                <th>Weather</th>
-            </tr>
-            </thead>
-            <tbody id="tbody-races"></tbody>
-        </table>
-    </div>
-
+<div id="view-results">
+    <h2>Race Results</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Track</th>
+            <th>Driver</th>
+            <th>Car</th>
+            <th>Pos</th>
+        </tr>
+        </thead>
+        <tbody id="tbody-results"></tbody>
+    </table>
 </div>
+
+<div id="view-drivers" class="hidden">
+    <h2>Drivers List</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Nationality</th>
+            <th>License</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="tbody-drivers"></tbody>
+    </table>
+</div>
+
+<div id="view-races" class="hidden">
+    <h2>Races Schedule</h2>
+
+    <button id="btn-open-add-race">+ Add New Race</button>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Track</th>
+            <th>Date</th>
+            <th>Distance</th>
+            <th>Weather</th>
+        </tr>
+        </thead>
+        <tbody id="tbody-races"></tbody>
+    </table>
+</div>
+
+<div id="view-add-race" class="hidden">
+    <h2>Add New Race</h2>
+
+    <form id="form-add-race">
+        <label for="input-track">Track Name:</label>
+        <input type="text" id="input-track">
+        <br>
+
+        <label for="input-date">Date:</label>
+        <input type="date" id="input-date">
+        <br>
+
+        <label for="input-distance">Distance (km):</label>
+        <input type="number" id="input-distance" step="0.1">
+        <br>
+
+        <label for="input-weather">Weather:</label>
+        <input type="text" id="input-weather">
+        <br>
+
+        <br>
+        <button type="submit">Save Race</button>
+        <button type="button" id="btn-cancel-add">Cancel</button>
+    </form>
+</div>
+
 </body>
 </html>

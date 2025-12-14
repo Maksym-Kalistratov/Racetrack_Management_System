@@ -1,66 +1,71 @@
 body {
     font-family: sans-serif;
-    background-color: #f4f4f9;
-    padding: 20px;
-    margin: 0;
-}
-
-.container {
     max-width: 800px;
     margin: 0 auto;
-    background: white;
     padding: 20px;
-    border: 1px solid #ddd;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+.hidden {
+    display: none;
 }
 
-.main-nav {
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.main-nav button {
-    padding: 10px 20px;
-    margin: 0 5px;
+nav button {
+    padding: 8px 12px;
+    margin-right: 5px;
     cursor: pointer;
-    background-color: #ddd;
-    border: none;
-    font-size: 16px;
-}
-
-h2 {
-    margin-top: 0;
-    color: #444;
+    font-size: 14px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid black;
 }
 
 th, td {
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 8px;
     text-align: left;
 }
 
 th {
-    background-color: #eee;
-    font-weight: bold;
+    background-color: #f2f2f2;
 }
 
-#connection-error {
+form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ccc;
+    max-width: 400px;
+}
+
+label {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input {
+    padding: 5px;
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+form button {
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.error-box {
     color: red;
+    background-color: #ffe6e6;
     border: 1px solid red;
     padding: 10px;
     margin-bottom: 15px;
-    text-align: center;
-    background-color: #ffeeee;
+    font-weight: bold;
 }

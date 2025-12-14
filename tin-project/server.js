@@ -5,12 +5,14 @@ const port = 3000;
 
 const dbModule = require('./database');
 
+
 dbModule.initializeDatabase();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/common", express.static(path.join(__dirname, "common")));
 
 app.use("/api", require("./routes/apiRouter"));
 
