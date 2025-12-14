@@ -2,6 +2,7 @@ body {
     font-family: sans-serif;
     background-color: #f4f4f9;
     padding: 20px;
+    margin: 0;
 }
 
 .container {
@@ -9,34 +10,57 @@ body {
     margin: 0 auto;
     background: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
 }
 
-h1 { text-align: center; color: #333; }
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.main-nav {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.main-nav button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: #ddd;
+    border: none;
+    font-size: 16px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #444;
+}
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 th, td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    border: 1px solid #ccc;
     text-align: left;
 }
 
-th { background-color: #007bff; color: white; }
-tr:hover { background-color: #f1f1f1; }
+th {
+    background-color: #eee;
+    font-weight: bold;
+}
 
 #connection-error {
-    background-color: #ffdddd;
-    color: #d8000c;
-    border: 1px solid #d8000c;
+    color: red;
+    border: 1px solid red;
     padding: 10px;
     margin-bottom: 15px;
-    border-radius: 4px;
     text-align: center;
-    font-weight: bold;
+    background-color: #ffeeee;
 }

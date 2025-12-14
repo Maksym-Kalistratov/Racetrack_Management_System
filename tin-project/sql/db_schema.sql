@@ -1,7 +1,6 @@
 PRAGMA
 foreign_keys = ON;
 
--- 1. Drivers Table
 CREATE TABLE IF NOT EXISTS drivers
 (
     id             INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,7 +10,6 @@ CREATE TABLE IF NOT EXISTS drivers
     is_active      INTEGER DEFAULT 1
 );
 
--- 2. Races Table
 CREATE TABLE IF NOT EXISTS races
 (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,7 +19,6 @@ CREATE TABLE IF NOT EXISTS races
     weather_forecast TEXT
 );
 
--- 3. Race Results (The Many-to-Many Connection)
 CREATE TABLE IF NOT EXISTS race_results
 (
     race_id         INTEGER,
@@ -34,3 +31,17 @@ CREATE TABLE IF NOT EXISTS race_results
     FOREIGN KEY (race_id) REFERENCES races (id) ON DELETE CASCADE,
     FOREIGN KEY (driver_id) REFERENCES drivers (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS roles (
+                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     name TEXT NOT NULL UNIQUE -- 'admin', 'user', 'guest'
+);
+
+CREATE TABLE IF NOT EXISTS users (
+                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     username TEXT NOT NULL UNIQUE,
+                                     password_hash TEXT NOT NULL,
+                                     role_id INTEGER,
+
+                                     FOREIGN KEY (role_id) REFERENCES roles(id)
+    );

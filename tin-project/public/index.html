@@ -2,31 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Race Results</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>Racetrack Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏁 Live Race Results</h1>
-
     <div id="connection-error" style="display: none;"></div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Date</th>
-            <th>Track</th>
-            <th>Driver</th>
-            <th>Car</th>
-            <th>Pos</th>
-        </tr>
-        </thead>
-        <tbody id="table-body">
-        </tbody>
-    </table>
-</div>
+    <header>
+        <h1>🏁 Racetrack Manager</h1>
 
-<script src="/script.js"></script>
+        <nav class="main-nav">
+            <button id="btn-results">🏆 Results</button>
+            <button id="btn-drivers">🏎️ Drivers</button>
+            <button id="btn-races">🌍 Races</button>
+        </nav>
+    </header>
+
+    <div id="view-results" class="view-section">
+        <h2>Race Results</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Track</th>
+                <th>Driver</th>
+                <th>Car</th>
+                <th>Pos</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-results"></tbody>
+        </table>
+    </div>
+
+    <div id="view-drivers" class="view-section" style="display: none;">
+        <h2>Drivers List</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Nationality</th>
+                <th>License</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-drivers"></tbody>
+        </table>
+    </div>
+
+    <div id="view-races" class="view-section" style="display: none;">
+        <h2>Races Schedule</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Track</th>
+                <th>Date</th>
+                <th>Distance</th>
+                <th>Weather</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-races"></tbody>
+        </table>
+    </div>
+
+</div>
 </body>
 </html>

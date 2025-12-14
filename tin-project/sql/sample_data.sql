@@ -21,3 +21,5 @@ VALUES (2, 3, 1, 'Ferrari SF-24'),
 INSERT INTO race_results (race_id, driver_id, finish_position, car_model)
 VALUES (3, 1, NULL, 'Red Bull RB20'),
        (3, 2, NULL, 'Mercedes W15');
+
+INSERT INTO roles (name) VALUES ('admin'), ('user'), ('guest');

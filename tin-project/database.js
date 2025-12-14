@@ -11,21 +11,49 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.log(`Connected to the SQLite database at ${dbPath}`);
 });
 
-const query = (sql, params = []) => {
+function query(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.all(sql, params, (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
+            if (err) reject(err);
+            else resolve(rows);
         });
     });
-};
+}
+
+function run(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        db.run(sql, params, function (err) {
+            if (err) reject(err);
+            else resolve({ id: this.lastID, changes: this.changes });
+        });
+    });
+}
+
+function getAllDrivers() {
+    return query("SELECT * FROM drivers ORDER BY full_name ASC");
+}
+
+function getAllRaces() {
+    return query("SELECT * FROM races ORDER BY race_date DESC");
+}
+
+function getAllResults() {
+    const sql = `
+        SELECT 
+            r.track_name, r.race_date, r.weather_forecast,
+            d.full_name, 
+            rr.finish_position, rr.car_model
+        FROM races r
+        JOIN race_results rr ON r.id = rr.race_id
+        JOIN drivers d ON d.id = rr.driver_id
+        ORDER BY r.race_date DESC, rr.finish_position ASC
+    `;
+    return query(sql);
+}
 
 function initializeDatabase() {
     const schemaPath = path.join(__dirname, 'sql', 'db_schema.sql');
-    const seedPath = path.join(__dirname, 'sql', 'samle_data.sql');
+    const seedPath = path.join(__dirname, 'sql', 'sample_data.sql');
 
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
     const seedSql = fs.readFileSync(seedPath, 'utf8');
@@ -75,5 +103,9 @@ module.exports = {
     db,
     initializeDatabase,
     closeDatabase,
-    query
+    query,
+    run,
+    getAllDrivers,
+    getAllRaces,
+    getAllResults
 };

@@ -2,23 +2,27 @@ const express = require('express');
 const router = express.Router();
 const dbModule = require('../database');
 
-router.get('/results', async (req, res) => {
-    const sql = `
-        SELECT 
-            r.track_name, 
-            r.race_date,
-            r.weather_forecast,
-            d.full_name, 
-            rr.finish_position,
-            rr.car_model
-        FROM races r
-        JOIN race_results rr ON r.id = rr.race_id
-        JOIN drivers d ON d.id = rr.driver_id
-        ORDER BY r.race_date DESC, rr.finish_position ASC
-    `;
-
+router.get('/drivers', async (req, res) => {
     try {
-        const rows = await dbModule.query(sql);
+        const rows = await dbModule.getAllDrivers();
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/races', async (req, res) => {
+    try {
+        const rows = await dbModule.getAllRaces();
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/results', async (req, res) => {
+    try {
+        const rows = await dbModule.getAllResults();
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
