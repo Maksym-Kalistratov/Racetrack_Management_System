@@ -20,7 +20,10 @@
 
 <hr>
 
-<div id="view-results">
+<div id="app-container"></div>
+
+
+<template id="tmpl-results">
     <h2>Race Results</h2>
     <table>
         <thead>
@@ -34,9 +37,9 @@
         </thead>
         <tbody id="tbody-results"></tbody>
     </table>
-</div>
+</template>
 
-<div id="view-drivers" class="hidden">
+<template id="tmpl-drivers">
     <h2>Drivers List</h2>
     <table>
         <thead>
@@ -50,13 +53,11 @@
         </thead>
         <tbody id="tbody-drivers"></tbody>
     </table>
-</div>
+</template>
 
-<div id="view-races" class="hidden">
+<template id="tmpl-races">
     <h2>Races Schedule</h2>
-
     <button id="btn-open-add-race">+ Add New Race</button>
-
     <table>
         <thead>
         <tr>
@@ -68,33 +69,28 @@
         </thead>
         <tbody id="tbody-races"></tbody>
     </table>
-</div>
+</template>
 
-<div id="view-add-race" class="hidden">
+<template id="tmpl-add-race">
     <h2>Add New Race</h2>
-
     <form id="form-add-race">
         <label for="input-track">Track Name:</label>
         <input type="text" id="input-track">
         <br>
-
         <label for="input-date">Date:</label>
         <input type="date" id="input-date">
         <br>
-
         <label for="input-distance">Distance (km):</label>
         <input type="number" id="input-distance" step="0.1">
         <br>
-
         <label for="input-weather">Weather:</label>
         <input type="text" id="input-weather">
         <br>
-
         <br>
         <button type="submit">Save Race</button>
         <button type="button" id="btn-cancel-add">Cancel</button>
     </form>
-</div>
+</template>
 
 </body>
 </html>

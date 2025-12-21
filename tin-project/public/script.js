@@ -1,86 +1,133 @@
 import {validateRace} from '/common/validation.js';
 
+const appContainer = document.getElementById('app-container');
 const errorBox = document.getElementById('connection-error');
 
 const btnResults = document.getElementById('btn-results');
 const btnDrivers = document.getElementById('btn-drivers');
 const btnRaces = document.getElementById('btn-races');
 
-const viewResults = document.getElementById('view-results');
-const viewDrivers = document.getElementById('view-drivers');
-const viewRaces = document.getElementById('view-races');
-const viewAddRace = document.getElementById('view-add-race');
-
-const tbodyResults = document.getElementById('tbody-results');
-const tbodyDrivers = document.getElementById('tbody-drivers');
-const tbodyRaces = document.getElementById('tbody-races');
-
-const btnOpenAddRace = document.getElementById('btn-open-add-race'); // Add New Race
-const btnCancelAdd = document.getElementById('btn-cancel-add');      // Cancel
-
-const formAddRace = document.getElementById('form-add-race');
-
-// Event Listeners
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadData('/api/results', tbodyResults, renderResultsRow);
+    renderResults();
 });
 
-btnResults.addEventListener('click', () => {
-    switchView(viewResults);
-    loadData('/api/results', tbodyResults, renderResultsRow);
-});
+btnResults.addEventListener('click', renderResults);
+btnDrivers.addEventListener('click', renderDrivers);
+btnRaces.addEventListener('click', renderRaces);
 
-btnDrivers.addEventListener('click', () => {
-    switchView(viewDrivers);
-    loadData('/api/drivers', tbodyDrivers, renderDriversRow);
-});
 
-btnRaces.addEventListener('click', () => {
-    switchView(viewRaces);
-    loadData('/api/races', tbodyRaces, renderRacesRow);
-});
+// Renderer
 
-if (btnOpenAddRace) {
-    btnOpenAddRace.addEventListener('click', () => {
-        switchView(viewAddRace);
-        displayError('');
+function loadTemplate(templateId) {
+    appContainer.innerHTML = '';
+
+    const template = document.getElementById(templateId);
+
+    const clone = template.content.cloneNode(true);
+    appContainer.appendChild(clone);
+}
+
+function renderResults() {
+    displayError('');
+    loadTemplate('tmpl-results');
+
+    const tbody = document.getElementById('tbody-results');
+    loadData('/api/results', tbody, renderResultsRow);
+}
+
+function renderDrivers() {
+    displayError('');
+    loadTemplate('tmpl-drivers');
+
+    const tbody = document.getElementById('tbody-drivers');
+    loadData('/api/drivers', tbody, renderDriversRow);
+}
+
+function renderRaces() {
+    displayError('');
+    loadTemplate('tmpl-races');
+
+    const tbody = document.getElementById('tbody-races');
+    loadData('/api/races', tbody, renderRacesRow);
+
+    const btnOpenAdd = document.getElementById('btn-open-add-race');
+    btnOpenAdd.addEventListener('click', renderAddRaceForm);
+}
+
+function renderAddRaceForm() {
+    displayError('');
+    loadTemplate('tmpl-add-race');
+
+    const form = document.getElementById('form-add-race');
+    const btnCancel = document.getElementById('btn-cancel-add');
+
+    btnCancel.addEventListener('click', renderRaces);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleAddRaceSubmit();
     });
 }
 
-if (btnCancelAdd) {
-    btnCancelAdd.addEventListener('click', () => {
-        switchView(viewRaces);
-        formAddRace.reset();
-        displayError('');
-    });
+
+// Forms
+
+async function handleAddRaceSubmit() {
+    const trackVal = document.getElementById('input-track').value;
+    const dateVal = document.getElementById('input-date').value;
+    const distVal = document.getElementById('input-distance').value;
+    const weatherVal = document.getElementById('input-weather').value;
+
+    const errors = validateRace(trackVal, dateVal, distVal, weatherVal);
+
+    if (errors.length > 0) {
+        displayError(errors.join('<br>'));
+        return;
+    }
+
+    const newRace = {
+        track_name: trackVal,
+        race_date: dateVal,
+        distance_km: distVal,
+        weather_forecast: weatherVal
+    };
+
+    try {
+        const response = await fetch('/api/races', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newRace)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Race added successfully!');
+            renderRaces();
+        } else {
+            const msg = result.error || 'Failed to add race';
+            const formattedMsg = msg.replace(/\n/g, '<br>');
+
+            displayError(formattedMsg);
+        }
+    } catch (error) {
+        console.error(error);
+        displayError('Network Error');
+    }
 }
 
-// Logic Functions
-
-function switchView(targetView) {
-    const allViews = document.querySelectorAll('div[id^="view-"]');
-
-    allViews.forEach(view => {
-        view.classList.add('hidden');
-    });
-
-    targetView.classList.remove('hidden');
-}
+// Helpers
 
 async function loadData(url, tbodyElement, renderRowCallback) {
-    displayError('');
+    if (!tbodyElement) return;
+
     tbodyElement.innerHTML = '<tr><td colspan="5">Loading data...</td></tr>';
 
     try {
         const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`Server Error: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Server Error: ${response.status}`);
 
         const data = await response.json();
-
         tbodyElement.innerHTML = '';
 
         if (data.length === 0) {
@@ -103,14 +150,13 @@ async function loadData(url, tbodyElement, renderRowCallback) {
 
 function displayError(message) {
     if (message) {
-        errorBox.innerText = message;
+        errorBox.innerHTML = message;
+        errorBox.classList.remove('hidden');
         errorBox.style.display = 'block';
     } else {
         errorBox.style.display = 'none';
     }
 }
-
-// Render
 
 function renderResultsRow(row) {
     return `
@@ -125,7 +171,6 @@ function renderResultsRow(row) {
 function renderDriversRow(row) {
     const statusColor = row.is_active ? 'green' : 'red';
     const statusText = row.is_active ? 'Active' : 'Retired';
-
     return `
         <td>${row.id}</td>
         <td><strong>${row.full_name}</strong></td>
@@ -142,50 +187,4 @@ function renderRacesRow(row) {
         <td>${row.distance_km} km</td>
         <td>${row.weather_forecast || '-'}</td>
     `;
-}
-
-if (formAddRace) {
-    formAddRace.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const trackVal = document.getElementById('input-track').value;
-        const dateVal = document.getElementById('input-date').value;
-        const distVal = document.getElementById('input-distance').value;
-        const weatherVal = document.getElementById('input-weather').value;
-
-        const errors = validateRace(trackVal, dateVal, distVal, weatherVal);
-
-        if (errors.length > 0) {
-            displayError(errors.join('<br>'));
-            return;
-        }
-
-        const newRace = {
-            track_name: trackVal,
-            race_date: dateVal,
-            distance_km: distVal,
-            weather_forecast: weatherVal
-        };
-
-        try {
-            const response = await fetch('/api/races', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(newRace)
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                alert('Race added successfully!');
-                formAddRace.reset();
-                switchView(viewRaces);
-                await loadData('/api/races', tbodyRaces, renderRacesRow);
-            } else {
-                displayError(result.error || 'Failed to add race');
-            }
-        } catch (error) {
-            console.error(error);
-            displayError('Network Error');
-        }
-    });
 }

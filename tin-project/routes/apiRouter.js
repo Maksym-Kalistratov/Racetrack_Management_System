@@ -36,7 +36,7 @@ router.post('/races', async (req, res) => {
     const errors = validator.validateRace(track_name, race_date, distance_km, weather_forecast);
 
     if (errors.length > 0) {
-        return res.status(400).json({ error: errors.join(', ') });
+        return res.status(400).json({ error: errors.join('\n ') });
     }
 
     try {
