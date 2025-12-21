@@ -1,4 +1,4 @@
-import { validateRace, validateUser } from '/common/validation.js';
+import {validateRace, validateUser} from '/common/validation.js';
 
 let currentUser = null;
 
@@ -19,15 +19,15 @@ const btnLogout = document.getElementById('btn-logout');
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
-    renderResults();
+    await renderResults();
 });
 
 btnResults.addEventListener('click', renderResults);
 btnDrivers.addEventListener('click', renderDrivers);
 btnRaces.addEventListener('click', renderRaces);
 
-btnLogin.addEventListener('click', renderLoginForm);
-btnRegister.addEventListener('click', renderRegisterForm);
+btnLogin.addEventListener('click', () => renderAuthForm('login'));
+btnRegister.addEventListener('click', () => renderAuthForm('register'));
 btnLogout.addEventListener('click', handleLogout);
 
 
@@ -42,35 +42,41 @@ function loadTemplate(templateId) {
     appContainer.appendChild(clone);
 }
 
-function renderResults() {
+async function renderResults() {
     displayError('');
     loadTemplate('tmpl-results');
 
     const tbody = document.getElementById('tbody-results');
-    loadData('/api/results', tbody, renderResultsRow);
+    await loadData('/api/results', tbody, renderResultsRow);
 }
 
-function renderDrivers() {
+async function renderDrivers() {
     displayError('');
     loadTemplate('tmpl-drivers');
 
     const tbody = document.getElementById('tbody-drivers');
-    loadData('/api/drivers', tbody, renderDriversRow);
+    await loadData('/api/drivers', tbody, renderDriversRow);
 }
 
-function renderRaces() {
+async function renderRaces() {
     displayError('');
     loadTemplate('tmpl-races');
 
     const tbody = document.getElementById('tbody-races');
-    loadData('/api/races', tbody, renderRacesRow);
+    await loadData('/api/races', tbody, renderRacesRow);
 
     const btnOpenAdd = document.getElementById('btn-open-add-race');
+    const btnOpenDelete = document.getElementById('btn-open-delete-race');
+
     if (currentUser && currentUser.role === 'admin') {
         btnOpenAdd.style.display = 'inline-block';
         btnOpenAdd.addEventListener('click', renderAddRaceForm);
+
+        btnOpenDelete.style.display = 'inline-block';
+        btnOpenDelete.addEventListener('click', renderDeleteRaceForm);
     } else {
         btnOpenAdd.style.display = 'none';
+        btnOpenDelete.style.display = 'none';
     }
 }
 
@@ -87,6 +93,77 @@ function renderAddRaceForm() {
         e.preventDefault();
         await handleAddRaceSubmit();
     });
+}
+
+async function renderDeleteRaceForm() {
+    displayError('');
+    loadTemplate('tmpl-delete-race');
+
+    const form = document.getElementById('form-delete-race');
+    const btnCancel = document.getElementById('btn-cancel-delete');
+    const select = document.getElementById('select-race-delete');
+
+    btnCancel.addEventListener('click', renderRaces);
+
+    try {
+        const response = await fetch('/api/races');
+        const races = await response.json();
+
+        select.innerHTML = '';
+
+        if (races.length === 0) {
+            const option = document.createElement('option');
+            option.text = "No races available";
+            select.appendChild(option);
+            select.disabled = true;
+        } else {
+            races.forEach(race => {
+                const option = document.createElement('option');
+                option.value = race.id;
+                option.text = `${race.track_name} (${race.race_date})`;
+                select.appendChild(option);
+            });
+        }
+    } catch (e) {
+        displayError("Failed to load races list");
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleDeleteSubmit();
+    });
+}
+
+async function handleDeleteSubmit() {
+    const select = document.getElementById('select-race-delete');
+    const raceId = select.value;
+
+    if (!raceId) {
+        displayError("Please select a race");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this race?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/races/${raceId}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Race deleted successfully!');
+            await renderRaces();
+        } else {
+            displayError(result.error || 'Failed to delete race');
+        }
+    } catch (error) {
+        console.error(error);
+        displayError('Network Error');
+    }
 }
 
 async function checkAuth() {
@@ -120,36 +197,40 @@ function updateNavUI() {
 
 async function handleLogout() {
     try {
-        await fetch('/api/auth/logout', { method: 'POST' });
+        await fetch('/api/auth/logout', {method: 'POST'});
         currentUser = null;
         updateNavUI();
         alert('You have logged out.');
-        renderResults();
+        await renderResults();
     } catch (e) {
         console.error(e);
     }
 }
 
-
-function renderLoginForm() {
+async function renderAuthForm(mode) {
     displayError('');
-    loadTemplate('tmpl-login');
+    loadTemplate('tmpl-auth');
 
-    const form = document.getElementById('form-login');
+    const title = document.getElementById('auth-title');
+    const btn = document.getElementById('btn-auth-submit');
+    const form = document.getElementById('form-auth');
+
+    if (mode === 'login') {
+        title.textContent = 'Login';
+        btn.textContent = 'Sign In';
+    } else {
+        title.textContent = 'Register New User';
+        btn.textContent = 'Create Account';
+    }
+
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        await handleLoginSubmit();
-    });
-}
-
-function renderRegisterForm() {
-    displayError('');
-    loadTemplate('tmpl-register');
-
-    const form = document.getElementById('form-register');
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        await handleRegisterSubmit();
+        if (mode === 'login') {
+            await handleLoginSubmit();
+        } else {
+            await handleRegisterSubmit();
+        }
     });
 }
 
@@ -186,12 +267,10 @@ async function handleAddRaceSubmit() {
         const result = await response.json();
         if (response.ok) {
             alert('Race added successfully!');
-            renderRaces();
+            await renderRaces();
         } else {
             const msg = result.error || 'Failed to add race';
-            const formattedMsg = msg.replace(/\n/g, '<br>');
-
-            displayError(formattedMsg);
+            displayError(msg);
         }
     } catch (error) {
         console.error(error);
@@ -200,8 +279,8 @@ async function handleAddRaceSubmit() {
 }
 
 async function handleRegisterSubmit() {
-    const username = document.getElementById('reg-user').value;
-    const password = document.getElementById('reg-pass').value;
+    const username = document.getElementById('input-auth-user').value;
+    const password = document.getElementById('input-auth-pass').value;
 
     const errors = validateUser(username, password);
     if (errors.length > 0) {
@@ -212,14 +291,14 @@ async function handleRegisterSubmit() {
     try {
         const res = await fetch('/api/auth/register', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password})
         });
         const data = await res.json();
 
         if (res.ok) {
             alert('Registration successful! Please login.');
-            renderLoginForm();
+            await renderAuthForm('login');
         } else {
             displayError(data.error);
         }
@@ -230,21 +309,21 @@ async function handleRegisterSubmit() {
 
 async function handleLoginSubmit() {
 
-    const username = document.getElementById('auth-user').value;
-    const password = document.getElementById('auth-pass').value;
+    const username = document.getElementById('input-auth-user').value;
+    const password = document.getElementById('input-auth-pass').value;
 
     try {
         const res = await fetch('/api/auth/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password})
         });
         const data = await res.json();
 
         if (res.ok) {
             currentUser = data.user;
             updateNavUI();
-            renderRaces();
+            await renderRaces();
         } else {
             displayError(data.error);
         }

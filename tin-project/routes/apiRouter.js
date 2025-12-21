@@ -37,7 +37,7 @@ router.post('/races', isAdmin, async (req, res) => {
     const errors = validator.validateRace(track_name, race_date, distance_km, weather_forecast);
 
     if (errors.length > 0) {
-        return res.status(400).json({ error: errors.join('\n ') });
+        return res.status(400).json({ error: errors.join('<br>') });
     }
 
     try {
@@ -52,6 +52,46 @@ router.post('/races', isAdmin, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Database error: " + err.message });
+    }
+});
+
+router.delete('/races/:id', isAdmin, async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const result = await dbModule.deleteRace(id);
+
+        if (result.changes === 0) {
+            return res.status(404).json({ error: "Race not found" });
+        }
+
+        res.json({ success: true, message: "Race deleted" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
+router.put('/races/:id', isAdmin, async (req, res) => {
+    const id = req.params.id;
+    const { track_name, race_date, distance_km, weather_forecast } = req.body;
+
+    const errors = validator.validateRace(track_name, race_date, distance_km, weather_forecast);
+    if (errors.length > 0) {
+        return res.status(400).json({ error: errors.join('<br>') });
+    }
+
+    try {
+        const result = await dbModule.updateRace(id, track_name, race_date, distance_km, weather_forecast);
+
+        if (result.changes === 0) {
+            return res.status(404).json({ error: "Race not found" });
+        }
+
+        res.json({ success: true, message: "Race updated" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
     }
 });
 

@@ -70,6 +70,7 @@
 <template id="tmpl-races">
     <h2>Races Schedule</h2>
     <button id="btn-open-add-race">+ Add New Race</button>
+    <button id="btn-open-delete-race" style="background-color: #d9534f; display: none;">🗑️ Delete Race</button>
     <table>
         <thead>
         <tr>
@@ -104,21 +105,28 @@
     </form>
 </template>
 
-<template id="tmpl-login">
-    <h2>Login</h2>
-    <form id="form-login">
-        <label>Username: <input type="text" id="auth-user"></label><br>
-        <label>Password: <input type="password" id="auth-pass"></label><br><br>
-        <button type="submit">Sign In</button>
+<template id="tmpl-auth">
+    <h2 id="auth-title"></h2>
+    <form id="form-auth">
+        <label>Username: <input type="text" id="input-auth-user"></label><br>
+        <label>Password: <input type="password" id="input-auth-pass"></label><br><br>
+        <button type="submit" id="btn-auth-submit"></button>
     </form>
 </template>
 
-<template id="tmpl-register">
-    <h2>Register New User</h2>
-    <form id="form-register">
-        <label>Username: <input type="text" id="reg-user"></label><br>
-        <label>Password: <input type="password" id="reg-pass"></label><br><br>
-        <button type="submit">Create Account</button>
+<template id="tmpl-delete-race">
+    <h2>Delete Race</h2>
+    <p>Select a race to remove permanently:</p>
+
+    <form id="form-delete-race">
+        <label for="select-race-delete">Choose Race:</label>
+        <select id="select-race-delete" style="padding: 5px; margin-bottom: 10px; width: 100%;">
+            <option value="" disabled selected>Loading races...</option>
+        </select>
+        <br><br>
+
+        <button type="submit" style="background-color: #d9534f;">Delete Permanently</button>
+        <button type="button" id="btn-cancel-delete">Cancel</button>
     </form>
 </template>
 

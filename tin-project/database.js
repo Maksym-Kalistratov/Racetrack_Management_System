@@ -70,6 +70,20 @@ function createRace(trackName, raceDate, distance, weather) {
     return run(sql, [trackName, raceDate, distance, weather]);
 }
 
+function updateRace(id, trackName, raceDate, distance, weather) {
+    const sql = `
+        UPDATE races 
+        SET track_name = ?, race_date = ?, distance_km = ?, weather_forecast = ?
+        WHERE id = ?
+    `;
+    return run(sql, [trackName, raceDate, distance, weather, id]);
+}
+
+function deleteRace(id) {
+    const sql = `DELETE FROM races WHERE id = ?`;
+    return run(sql, [id]);
+}
+
 function initializeDatabase() {
     const schemaPath = path.join(__dirname, 'sql', 'db_schema.sql');
     const seedPath = path.join(__dirname, 'sql', 'sample_data.sql');
@@ -172,4 +186,6 @@ module.exports = {
     saveSession,
     destroySession,
     getRoleByName,
+    updateRace,
+    deleteRace
 };
