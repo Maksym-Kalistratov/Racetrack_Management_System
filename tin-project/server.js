@@ -31,6 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/common", express.static(path.join(__dirname, "common")));
 
 app.use("/api", require("./routes/apiRouter"));
+app.use('/api/auth', require("./routes/authRouter"));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "public", "html", "index.html"));

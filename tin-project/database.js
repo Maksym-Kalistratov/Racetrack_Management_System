@@ -118,16 +118,24 @@ function closeDatabase() {
     });
 }
 
-function createUser(username, passwordHash) {
-    const sql = `INSERT INTO users (username, password_hash)
-                 VALUES (?, ?)`;
-    return run(sql, [username, passwordHash]);
+function getRoleByName(name) {
+    return get("SELECT id FROM roles WHERE name = ?", [name]);
+}
+
+function createUser(username, passwordHash, roleId) {
+    const sql = `INSERT INTO users (username, password_hash, role_id)
+                 VALUES (?, ?, ?)`;
+    return run(sql, [username, passwordHash, roleId]);
 }
 
 function findUserByUsername(username) {
-    return get(`SELECT *
-                FROM users
-                WHERE username = ?`, [username]);
+    const sql = `
+        SELECT u.*, r.name as role_name
+        FROM users u
+                 LEFT JOIN roles r ON u.role_id = r.id
+        WHERE u.username = ?
+    `;
+    return get(sql, [username]);
 }
 
 async function getSession(sid) {
@@ -162,5 +170,6 @@ module.exports = {
     findUserByUsername,
     getSession,
     saveSession,
-    destroySession
+    destroySession,
+    getRoleByName,
 };

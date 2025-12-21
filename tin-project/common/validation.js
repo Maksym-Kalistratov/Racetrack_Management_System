@@ -27,7 +27,7 @@ export function validateRace(trackRaw, dateRaw, distanceRaw, weatherRaw) {
     return errors;
 }
 
-function validateUser(usernameRaw, passwordRaw) {
+export function validateUser(usernameRaw, passwordRaw) {
     const errors = [];
 
     const username = (usernameRaw || "").toString().trim();

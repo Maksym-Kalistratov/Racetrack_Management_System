@@ -16,6 +16,18 @@
     <button id="btn-results">🏆 Results</button>
     <button id="btn-drivers">🏎️ Drivers</button>
     <button id="btn-races">🌍 Races</button>
+
+    <span style="flex-grow: 1;"></span>
+
+    <div id="nav-guest" style="display: inline-block;">
+        <button id="btn-login">🔑 Login</button>
+        <button id="btn-register">📝 Register</button>
+    </div>
+
+    <div id="nav-user" class="hidden" style="display: none;"><span id="user-display"
+                                                                   style="font-weight: bold; margin-right: 10px;"></span>
+        <button id="btn-logout">🚪 Logout</button>
+    </div>
 </nav>
 
 <hr>
@@ -89,6 +101,24 @@
         <br>
         <button type="submit">Save Race</button>
         <button type="button" id="btn-cancel-add">Cancel</button>
+    </form>
+</template>
+
+<template id="tmpl-login">
+    <h2>Login</h2>
+    <form id="form-login">
+        <label>Username: <input type="text" id="auth-user"></label><br>
+        <label>Password: <input type="password" id="auth-pass"></label><br><br>
+        <button type="submit">Sign In</button>
+    </form>
+</template>
+
+<template id="tmpl-register">
+    <h2>Register New User</h2>
+    <form id="form-register">
+        <label>Username: <input type="text" id="reg-user"></label><br>
+        <label>Password: <input type="password" id="reg-pass"></label><br><br>
+        <button type="submit">Create Account</button>
     </form>
 </template>
 

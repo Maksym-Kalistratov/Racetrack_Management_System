@@ -1,4 +1,6 @@
-import {validateRace} from '/common/validation.js';
+import { validateRace, validateUser } from '/common/validation.js';
+
+let currentUser = null;
 
 const appContainer = document.getElementById('app-container');
 const errorBox = document.getElementById('connection-error');
@@ -7,14 +9,26 @@ const btnResults = document.getElementById('btn-results');
 const btnDrivers = document.getElementById('btn-drivers');
 const btnRaces = document.getElementById('btn-races');
 
+const navGuest = document.getElementById('nav-guest');
+const navUser = document.getElementById('nav-user');
+const userDisplay = document.getElementById('user-display');
+const btnLogin = document.getElementById('btn-login');
+const btnRegister = document.getElementById('btn-register');
+const btnLogout = document.getElementById('btn-logout');
 
-document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuth();
     renderResults();
 });
 
 btnResults.addEventListener('click', renderResults);
 btnDrivers.addEventListener('click', renderDrivers);
 btnRaces.addEventListener('click', renderRaces);
+
+btnLogin.addEventListener('click', renderLoginForm);
+btnRegister.addEventListener('click', renderRegisterForm);
+btnLogout.addEventListener('click', handleLogout);
 
 
 // Renderer
@@ -52,7 +66,12 @@ function renderRaces() {
     loadData('/api/races', tbody, renderRacesRow);
 
     const btnOpenAdd = document.getElementById('btn-open-add-race');
-    btnOpenAdd.addEventListener('click', renderAddRaceForm);
+    if (currentUser && currentUser.role === 'admin') {
+        btnOpenAdd.style.display = 'inline-block';
+        btnOpenAdd.addEventListener('click', renderAddRaceForm);
+    } else {
+        btnOpenAdd.style.display = 'none';
+    }
 }
 
 function renderAddRaceForm() {
@@ -67,6 +86,70 @@ function renderAddRaceForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         await handleAddRaceSubmit();
+    });
+}
+
+async function checkAuth() {
+    try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+
+        if (data.authenticated) {
+            currentUser = data.user;
+        } else {
+            currentUser = null;
+        }
+    } catch (e) {
+        console.error("Auth check failed", e);
+        currentUser = null;
+    }
+    updateNavUI();
+}
+
+function updateNavUI() {
+    if (currentUser) {
+        navGuest.style.display = 'none';
+        navUser.style.display = 'inline-block';
+        userDisplay.textContent = `Hello, ${currentUser.username}`;
+    } else {
+        navGuest.style.display = 'inline-block';
+        navUser.style.display = 'none';
+        userDisplay.textContent = '';
+    }
+}
+
+async function handleLogout() {
+    try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        currentUser = null;
+        updateNavUI();
+        alert('You have logged out.');
+        renderResults();
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+
+function renderLoginForm() {
+    displayError('');
+    loadTemplate('tmpl-login');
+
+    const form = document.getElementById('form-login');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleLoginSubmit();
+    });
+}
+
+function renderRegisterForm() {
+    displayError('');
+    loadTemplate('tmpl-register');
+
+    const form = document.getElementById('form-register');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleRegisterSubmit();
     });
 }
 
@@ -113,6 +196,60 @@ async function handleAddRaceSubmit() {
     } catch (error) {
         console.error(error);
         displayError('Network Error');
+    }
+}
+
+async function handleRegisterSubmit() {
+    const username = document.getElementById('reg-user').value;
+    const password = document.getElementById('reg-pass').value;
+
+    const errors = validateUser(username, password);
+    if (errors.length > 0) {
+        displayError(errors.join('<br>'));
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+            alert('Registration successful! Please login.');
+            renderLoginForm();
+        } else {
+            displayError(data.error);
+        }
+    } catch (e) {
+        displayError("Registration network error");
+    }
+}
+
+async function handleLoginSubmit() {
+
+    const username = document.getElementById('auth-user').value;
+    const password = document.getElementById('auth-pass').value;
+
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+            currentUser = data.user;
+            updateNavUI();
+            renderRaces();
+        } else {
+            displayError(data.error);
+        }
+    } catch (e) {
+        displayError("Login network error");
     }
 }
 

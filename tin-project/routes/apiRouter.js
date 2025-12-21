@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const dbModule = require('../database');
 const validator = require("../common/validation");
+const { isAdmin } = require('../middleware/checkAuth');
 
 router.get('/drivers', async (req, res) => {
     try {
@@ -30,7 +31,7 @@ router.get('/results', async (req, res) => {
     }
 });
 
-router.post('/races', async (req, res) => {
+router.post('/races', isAdmin, async (req, res) => {
     const { track_name, race_date, distance_km, weather_forecast } = req.body;
 
     const errors = validator.validateRace(track_name, race_date, distance_km, weather_forecast);
