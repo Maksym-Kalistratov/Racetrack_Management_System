@@ -9,9 +9,6 @@ const btnResults = document.getElementById('btn-results');
 const btnDrivers = document.getElementById('btn-drivers');
 const btnRaces = document.getElementById('btn-races');
 
-const navGuest = document.getElementById('nav-guest');
-const navUser = document.getElementById('nav-user');
-const userDisplay = document.getElementById('user-display');
 const btnLogin = document.getElementById('btn-login');
 const btnRegister = document.getElementById('btn-register');
 const btnLogout = document.getElementById('btn-logout');
@@ -70,9 +67,9 @@ async function renderRaces() {
 
     if (currentUser && currentUser.role === 'admin') {
         btnOpenAdd.style.display = 'inline-block';
-        btnOpenAdd.addEventListener('click', renderAddRaceForm);
-
         btnOpenDelete.style.display = 'inline-block';
+
+        btnOpenAdd.addEventListener('click', renderAddRaceForm);
         btnOpenDelete.addEventListener('click', renderDeleteRaceForm);
     } else {
         btnOpenAdd.style.display = 'none';
@@ -184,14 +181,32 @@ async function checkAuth() {
 }
 
 function updateNavUI() {
+    const container = document.getElementById('nav-auth-container');
+    container.innerHTML = '';
+
     if (currentUser) {
-        navGuest.style.display = 'none';
-        navUser.style.display = 'inline-block';
+        const template = document.getElementById('tmpl-nav-user');
+        const clone = template.content.cloneNode(true);
+
+        const userDisplay = clone.getElementById('user-display');
         userDisplay.textContent = `Hello, ${currentUser.username}`;
+
+        const btnLogout = clone.getElementById('btn-logout');
+        btnLogout.addEventListener('click', handleLogout);
+
+        container.appendChild(clone);
+
     } else {
-        navGuest.style.display = 'inline-block';
-        navUser.style.display = 'none';
-        userDisplay.textContent = '';
+        const template = document.getElementById('tmpl-nav-guest');
+        const clone = template.content.cloneNode(true);
+
+        const btnLogin = clone.getElementById('btn-login');
+        const btnRegister = clone.getElementById('btn-register');
+
+        btnLogin.addEventListener('click', () => renderAuthForm('login'));
+        btnRegister.addEventListener('click', () => renderAuthForm('register'));
+
+        container.appendChild(clone);
     }
 }
 
@@ -367,10 +382,10 @@ async function loadData(url, tbodyElement, renderRowCallback) {
 function displayError(message) {
     if (message) {
         errorBox.innerHTML = message;
-        errorBox.classList.remove('hidden');
-        errorBox.style.display = 'block';
+        errorBox.classList.remove('d-none');
     } else {
-        errorBox.style.display = 'none';
+        errorBox.innerHTML = '';
+        errorBox.classList.add('d-none');
     }
 }
 

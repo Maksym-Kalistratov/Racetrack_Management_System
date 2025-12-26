@@ -29,6 +29,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/common", express.static(path.join(__dirname, "common")));
+app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 
 app.use("/api", require("./routes/apiRouter"));
 app.use('/api/auth', require("./routes/authRouter"));

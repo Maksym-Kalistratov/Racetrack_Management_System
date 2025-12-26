@@ -2,132 +2,158 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Racetrack Manager</title>
+    <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="script.js"></script>
 </head>
-<body>
+<body class="bg-light p-4">
 
-<h1>🏁 Racetrack Manager</h1>
+<div class="container">
+    <h1 class="mb-4">🏁 Racetrack Manager</h1>
 
-<div id="connection-error" class="error-box hidden"></div>
+    <div id="connection-error" class="alert alert-danger d-none" role="alert"></div>
 
-<nav>
-    <button id="btn-results">🏆 Results</button>
-    <button id="btn-drivers">🏎️ Drivers</button>
-    <button id="btn-races">🌍 Races</button>
+    <nav class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mb-4">
+        <div class="btn-group">
+            <button id="btn-results" class="btn btn-outline-primary">🏆 Results</button>
+            <button id="btn-drivers" class="btn btn-outline-primary">🏎️ Drivers</button>
+            <button id="btn-races" class="btn btn-outline-primary">🌍 Races</button>
+        </div>
 
-    <span style="flex-grow: 1;"></span>
+        <div id="nav-auth-container" class="d-flex align-items-center"></div>
 
-    <div id="nav-guest" style="display: inline-block;">
-        <button id="btn-login">🔑 Login</button>
-        <button id="btn-register">📝 Register</button>
-    </div>
+    </nav>
 
-    <div id="nav-user" class="hidden" style="display: none;"><span id="user-display"
-                                                                   style="font-weight: bold; margin-right: 10px;"></span>
-        <button id="btn-logout">🚪 Logout</button>
-    </div>
-</nav>
+    <hr class="mb-4">
 
-<hr>
-
-<div id="app-container"></div>
-
+    <div id="app-container" class="bg-white p-4 rounded shadow-sm"></div>
+</div>
 
 <template id="tmpl-results">
-    <h2>Race Results</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Date</th>
-            <th>Track</th>
-            <th>Driver</th>
-            <th>Car</th>
-            <th>Pos</th>
-        </tr>
-        </thead>
-        <tbody id="tbody-results"></tbody>
-    </table>
+    <h2 class="mb-3">Race Results</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Track</th>
+                <th>Driver</th>
+                <th>Car</th>
+                <th>Pos</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-results"></tbody>
+        </table>
+    </div>
 </template>
 
 <template id="tmpl-drivers">
-    <h2>Drivers List</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Nationality</th>
-            <th>License</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody id="tbody-drivers"></tbody>
-    </table>
+    <h2 class="mb-3">Drivers List</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Nationality</th>
+                <th>License</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-drivers"></tbody>
+        </table>
+    </div>
 </template>
 
 <template id="tmpl-races">
-    <h2>Races Schedule</h2>
-    <button id="btn-open-add-race">+ Add New Race</button>
-    <button id="btn-open-delete-race" style="background-color: #d9534f; display: none;">🗑️ Delete Race</button>
-    <table>
-        <thead>
-        <tr>
-            <th>Track</th>
-            <th>Date</th>
-            <th>Distance</th>
-            <th>Weather</th>
-        </tr>
-        </thead>
-        <tbody id="tbody-races"></tbody>
-    </table>
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Races Schedule</h2>
+        <div>
+            <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
+            <button id="btn-open-delete-race" class="btn btn-danger">🗑️ Delete Race</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-primary">
+            <tr>
+                <th>Track</th>
+                <th>Date</th>
+                <th>Distance</th>
+                <th>Weather</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-races"></tbody>
+        </table>
+    </div>
 </template>
 
 <template id="tmpl-add-race">
-    <h2>Add New Race</h2>
-    <form id="form-add-race">
-        <label for="input-track">Track Name:</label>
-        <input type="text" id="input-track">
-        <br>
-        <label for="input-date">Date:</label>
-        <input type="date" id="input-date">
-        <br>
-        <label for="input-distance">Distance (km):</label>
-        <input type="number" id="input-distance" step="0.1">
-        <br>
-        <label for="input-weather">Weather:</label>
-        <input type="text" id="input-weather">
-        <br>
-        <br>
-        <button type="submit">Save Race</button>
-        <button type="button" id="btn-cancel-add">Cancel</button>
+    <h2 class="mb-3">Add New Race</h2>
+    <form id="form-add-race" class="mw-600">
+        <label class="form-label">Track Name:</label>
+        <input type="text" id="input-track" class="form-control mb-2">
+
+        <div class="row mb-2">
+            <div class="col">
+                <label class="form-label">Date:</label>
+                <input type="date" id="input-date" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">Distance (km):</label>
+                <input type="number" id="input-distance" step="0.1" class="form-control">
+            </div>
+        </div>
+
+        <label class="form-label">Weather:</label>
+        <input type="text" id="input-weather" class="form-control mb-3">
+
+        <button type="submit" class="btn btn-primary">Save Race</button>
+        <button type="button" id="btn-cancel-add" class="btn btn-secondary">Cancel</button>
     </form>
 </template>
 
 <template id="tmpl-auth">
-    <h2 id="auth-title"></h2>
-    <form id="form-auth">
-        <label>Username: <input type="text" id="input-auth-user"></label><br>
-        <label>Password: <input type="password" id="input-auth-pass"></label><br><br>
-        <button type="submit" id="btn-auth-submit"></button>
-    </form>
+    <div class="card mw-400 mx-auto mt-4">
+        <div class="card-body">
+            <h2 id="auth-title" class="card-title text-center mb-3"></h2>
+            <form id="form-auth">
+                <label class="form-label">Username</label>
+                <input type="text" id="input-auth-user" class="form-control mb-2">
+
+                <label class="form-label">Password</label>
+                <input type="password" id="input-auth-pass" class="form-control mb-3">
+
+                <button type="submit" id="btn-auth-submit" class="btn btn-primary w-100"></button>
+            </form>
+        </div>
+    </div>
 </template>
 
 <template id="tmpl-delete-race">
-    <h2>Delete Race</h2>
-    <p>Select a race to remove permanently:</p>
+    <div class="alert alert-warning">
+        <h2 class="h4">Delete Race</h2>
+        <p>Select a race to remove permanently:</p>
+        <form id="form-delete-race">
+            <select id="select-race-delete" class="form-select mb-3">
+                <option value="" disabled selected>Loading races...</option>
+            </select>
+            <button type="submit" class="btn btn-danger">Delete Permanently</button>
+            <button type="button" id="btn-cancel-delete" class="btn btn-outline-secondary">Cancel</button>
+        </form>
+    </div>
+</template>
 
-    <form id="form-delete-race">
-        <label for="select-race-delete">Choose Race:</label>
-        <select id="select-race-delete" style="padding: 5px; margin-bottom: 10px; width: 100%;">
-            <option value="" disabled selected>Loading races...</option>
-        </select>
-        <br><br>
+<template id="tmpl-nav-guest">
+    <button id="btn-login" class="btn btn-light me-2">🔑 Login</button>
+    <button id="btn-register" class="btn btn-primary">📝 Register</button>
+</template>
 
-        <button type="submit" style="background-color: #d9534f;">Delete Permanently</button>
-        <button type="button" id="btn-cancel-delete">Cancel</button>
-    </form>
+<template id="tmpl-nav-user">
+    <span id="user-display" class="fw-bold me-3 text-secondary"></span>
+    <button id="btn-logout" class="btn btn-outline-danger btn-sm">🚪 Logout</button>
 </template>
 
 </body>
