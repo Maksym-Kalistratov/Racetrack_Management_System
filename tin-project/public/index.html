@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Racetrack Manager</title>
     <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -70,10 +69,7 @@
 <template id="tmpl-races">
     <div class="d-flex justify-content-between mb-3">
         <h2>Races Schedule</h2>
-        <div>
-            <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
-            <button id="btn-open-delete-race" class="btn btn-danger">🗑️ Delete Race</button>
-        </div>
+        <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
     </div>
     <div class="table-responsive">
         <table class="table table-hover">
@@ -83,7 +79,7 @@
                 <th>Date</th>
                 <th>Distance</th>
                 <th>Weather</th>
-            </tr>
+                <th>Actions</th> </tr>
             </thead>
             <tbody id="tbody-races"></tbody>
         </table>
@@ -91,7 +87,7 @@
 </template>
 
 <template id="tmpl-add-race">
-    <h2 class="mb-3">Add New Race</h2>
+    <h2 id="race-form-title" class="mb-3">Add New Race</h2>
     <form id="form-add-race" class="mw-600">
         <label class="form-label">Track Name:</label>
         <input type="text" id="input-track" class="form-control mb-2">
@@ -110,7 +106,7 @@
         <label class="form-label">Weather:</label>
         <input type="text" id="input-weather" class="form-control mb-3">
 
-        <button type="submit" class="btn btn-primary">Save Race</button>
+        <button type="submit" id="btn-race-submit" class="btn btn-primary">Save Race</button>
         <button type="button" id="btn-cancel-add" class="btn btn-secondary">Cancel</button>
     </form>
 </template>
@@ -129,20 +125,6 @@
                 <button type="submit" id="btn-auth-submit" class="btn btn-primary w-100"></button>
             </form>
         </div>
-    </div>
-</template>
-
-<template id="tmpl-delete-race">
-    <div class="alert alert-warning">
-        <h2 class="h4">Delete Race</h2>
-        <p>Select a race to remove permanently:</p>
-        <form id="form-delete-race">
-            <select id="select-race-delete" class="form-select mb-3">
-                <option value="" disabled selected>Loading races...</option>
-            </select>
-            <button type="submit" class="btn btn-danger">Delete Permanently</button>
-            <button type="button" id="btn-cancel-delete" class="btn btn-outline-secondary">Cancel</button>
-        </form>
     </div>
 </template>
 
