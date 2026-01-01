@@ -1,0 +1,24 @@
+<template id="tmpl-auth">
+    <div class="card mw-400 mx-auto mt-4">
+        <div class="card-body">
+            <h2 id="auth-title" class="card-title text-center mb-3"></h2>
+            <form id="form-auth">
+                <label class="form-label">Username</label>
+                <input type="text" id="input-auth-user" class="form-control mb-2">
+                <label class="form-label">Password</label>
+                <input type="password" id="input-auth-pass" class="form-control mb-3">
+                <button type="submit" id="btn-auth-submit" class="btn btn-primary w-100"></button>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="tmpl-nav-guest">
+    <button id="btn-login" class="btn btn-light me-2">🔑 Login</button>
+    <button id="btn-register" class="btn btn-primary">📝 Register</button>
+</template>
+
+<template id="tmpl-nav-user">
+    <span id="user-display" class="fw-bold me-3 text-secondary"></span>
+    <button id="btn-logout" class="btn btn-outline-danger btn-sm">🚪 Logout</button>
+</template>

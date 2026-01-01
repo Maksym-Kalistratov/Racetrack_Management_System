@@ -5,14 +5,14 @@
     <title>Racetrack Manager</title>
     <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </head>
 <body class="bg-light p-4">
 
 <div class="container">
     <h1 class="mb-4">🏁 Racetrack Manager</h1>
 
-    <div id="connection-error" class="alert alert-danger d-none" role="alert"></div>
+    <div id="error" class="alert alert-danger d-none" role="alert"></div>
 
     <nav class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mb-4">
         <div class="btn-group">
@@ -22,121 +22,12 @@
         </div>
 
         <div id="nav-auth-container" class="d-flex align-items-center"></div>
-
     </nav>
 
     <hr class="mb-4">
 
     <div id="app-container" class="bg-white p-4 rounded shadow-sm"></div>
 </div>
-
-<template id="tmpl-results">
-    <h2 class="mb-3">Race Results</h2>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-            <tr>
-                <th>Date</th>
-                <th>Track</th>
-                <th>Driver</th>
-                <th>Car</th>
-                <th>Pos</th>
-            </tr>
-            </thead>
-            <tbody id="tbody-results"></tbody>
-        </table>
-    </div>
-</template>
-
-<template id="tmpl-drivers">
-    <h2 class="mb-3">Drivers List</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-light">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Nationality</th>
-                <th>License</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody id="tbody-drivers"></tbody>
-        </table>
-    </div>
-</template>
-
-<template id="tmpl-races">
-    <div class="d-flex justify-content-between mb-3">
-        <h2>Races Schedule</h2>
-        <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead class="table-primary">
-            <tr>
-                <th>Track</th>
-                <th>Date</th>
-                <th>Distance</th>
-                <th>Weather</th>
-                <th>Actions</th> </tr>
-            </thead>
-            <tbody id="tbody-races"></tbody>
-        </table>
-    </div>
-</template>
-
-<template id="tmpl-add-race">
-    <h2 id="race-form-title" class="mb-3">Add New Race</h2>
-    <form id="form-add-race" class="mw-600">
-        <label class="form-label">Track Name:</label>
-        <input type="text" id="input-track" class="form-control mb-2">
-
-        <div class="row mb-2">
-            <div class="col">
-                <label class="form-label">Date:</label>
-                <input type="date" id="input-date" class="form-control">
-            </div>
-            <div class="col">
-                <label class="form-label">Distance (km):</label>
-                <input type="number" id="input-distance" step="0.1" class="form-control">
-            </div>
-        </div>
-
-        <label class="form-label">Weather:</label>
-        <input type="text" id="input-weather" class="form-control mb-3">
-
-        <button type="submit" id="btn-race-submit" class="btn btn-primary">Save Race</button>
-        <button type="button" id="btn-cancel-add" class="btn btn-secondary">Cancel</button>
-    </form>
-</template>
-
-<template id="tmpl-auth">
-    <div class="card mw-400 mx-auto mt-4">
-        <div class="card-body">
-            <h2 id="auth-title" class="card-title text-center mb-3"></h2>
-            <form id="form-auth">
-                <label class="form-label">Username</label>
-                <input type="text" id="input-auth-user" class="form-control mb-2">
-
-                <label class="form-label">Password</label>
-                <input type="password" id="input-auth-pass" class="form-control mb-3">
-
-                <button type="submit" id="btn-auth-submit" class="btn btn-primary w-100"></button>
-            </form>
-        </div>
-    </div>
-</template>
-
-<template id="tmpl-nav-guest">
-    <button id="btn-login" class="btn btn-light me-2">🔑 Login</button>
-    <button id="btn-register" class="btn btn-primary">📝 Register</button>
-</template>
-
-<template id="tmpl-nav-user">
-    <span id="user-display" class="fw-bold me-3 text-secondary"></span>
-    <button id="btn-logout" class="btn btn-outline-danger btn-sm">🚪 Logout</button>
-</template>
 
 </body>
 </html>

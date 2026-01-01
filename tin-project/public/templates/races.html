@@ -1,0 +1,42 @@
+<template id="tmpl-races">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Races Schedule</h2>
+        <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-primary">
+            <tr>
+                <th>Track</th>
+                <th>Date</th>
+                <th>Distance</th>
+                <th>Weather</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-races"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tmpl-add-race">
+    <h2 id="race-form-title" class="mb-3">Add New Race</h2>
+    <form id="form-add-race" class="mw-600">
+        <label class="form-label">Track Name:</label>
+        <input type="text" id="input-track" class="form-control mb-2">
+        <div class="row mb-2">
+            <div class="col">
+                <label class="form-label">Date:</label>
+                <input type="date" id="input-date" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">Distance (km):</label>
+                <input type="number" id="input-distance" step="0.1" class="form-control">
+            </div>
+        </div>
+        <label class="form-label">Weather:</label>
+        <input type="text" id="input-weather" class="form-control mb-3">
+        <button type="submit" id="btn-race-submit" class="btn btn-primary">Save Race</button>
+        <button type="button" id="btn-cancel-add" class="btn btn-secondary">Cancel</button>
+    </form>
+</template>
