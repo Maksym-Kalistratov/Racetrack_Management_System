@@ -46,9 +46,10 @@ function getAllDrivers() {
     return query('SELECT * FROM drivers ORDER BY full_name ASC');
 }
 
-function driverExistsById(id) {
-    return get('SELECT id FROM drivers WHERE id = ?',
+async function driverExistsById(id) {
+    const result = await get('SELECT 1 FROM drivers WHERE id = ?',
         [id]);
+    return !!result;
 }
 
 function createDriver(fullName, nationality, licenseNumber, isActive) {
@@ -84,15 +85,37 @@ function getAllResults() {
     return query(sql);
 }
 
+function createResult(raceId, driverId, finishPosition, carModel) {
+    return run('INSERT INTO race_results (race_id, driver_id, finish_position, car_model) VALUES (?, ?, ?, ?)',
+        [raceId, driverId, finishPosition, carModel]);
+}
+
+function deleteResult(raceId, driverId) {
+    return run('DELETE FROM race_results WHERE race_id = ? AND driver_id = ?',
+        [raceId, driverId]);
+}
+
+function updateResult(raceId, driverId, finishPosition, carModel) {
+    return run('UPDATE race_results SET finish_position = ?, car_model = ? WHERE race_id = ? AND driver_id = ?',
+        [finishPosition, carModel, raceId, driverId]);
+}
+
+async function resultExistsByRaceAndDriver(raceId, driverId) {
+    const result = await get('SELECT 1 FROM race_results WHERE race_id = ? AND driver_id = ?',
+        [raceId, driverId]);
+    return !!result;
+}
+
 // Races
 
 function getAllRaces() {
     return query('SELECT * FROM races ORDER BY race_date DESC');
 }
 
-function raceExistsById(id) {
-    return get('SELECT id FROM races WHERE id = ?',
-        [id]);
+async function raceExistsById(id) {
+    const result = await get('SELECT 1 FROM races WHERE id = ?',
+        [id])
+    return !!result;
 }
 
 function createRace(trackName, raceDate, distance, weather) {
@@ -207,6 +230,10 @@ module.exports = {
     driverExistsById,
 
     getAllResults,
+    createResult,
+    updateResult,
+    deleteResult,
+    resultExistsByRaceAndDriver,
 
     createUser,
     findUserByUsername,

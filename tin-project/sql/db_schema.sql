@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
-    role_id INTEGER,
+    role_id INTEGER NOT NULL,
 
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
