@@ -12,7 +12,7 @@ export async function checkAuth() {
             setCurrentUser(null);
         }
     } catch (e) {
-        console.error("Auth check failed", e);
+        console.error('Auth check failed', e);
         setCurrentUser(null);
     }
     updateNavUI();
@@ -105,7 +105,7 @@ async function handleLoginSubmit() {
             displayError(data.error);
         }
     } catch (e) {
-        displayError("Login network error");
+        displayError('Login network error');
     }
 }
 
@@ -134,6 +134,6 @@ async function handleRegisterSubmit() {
             displayError(data.error);
         }
     } catch (e) {
-        displayError("Registration network error");
+        displayError('Registration network error');
     }
 }

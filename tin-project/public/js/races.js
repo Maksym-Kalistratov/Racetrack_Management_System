@@ -48,22 +48,22 @@ function renderRacesRow(row) {
     if (currentUser && currentUser.role === 'admin') {
         html += `
             <td>
-                <button class="btn btn-sm btn-warning me-1 btn-edit" 
-                    data-id="${row.id}"
-                    data-track="${row.track_name}"
-                    data-date="${row.race_date}"
-                    data-dist="${row.distance_km}"
-                    data-weather="${row.weather_forecast || ''}">
+                <button class='btn btn-warning me-1 btn-edit' 
+                    data-id='${row.id}'
+                    data-track='${row.track_name}'
+                    data-date='${row.race_date}'
+                    data-dist='${row.distance_km}'
+                    data-weather='${row.weather_forecast || ''}'>
                     ✏️
                 </button>
-                <button class="btn btn-sm btn-danger btn-delete" 
-                    data-id="${row.id}">
+                <button class='btn btn-danger btn-delete' 
+                    data-id='${row.id}'>
                     🗑️
                 </button>
             </td>
         `;
     } else {
-        html += `<td>-</td>`;
+        html += '<td>-</td>';
     }
     return html;
 }
@@ -152,7 +152,7 @@ async function handleRaceFormSubmit(id = null) {
 }
 
 async function handleDelete(id) {
-    if (!confirm("Are you sure you want to delete this race permanently?")) {
+    if (!confirm('Are you sure you want to delete this race permanently?')) {
         return;
     }
     try {

@@ -1,5 +1,8 @@
 <template id="tmpl-results">
-    <h2 class="mb-3">Race Results</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Race Results</h2>
+        <button id="btn-open-add-result" class="btn btn-success">➕ Add Result</button>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-dark">
@@ -9,9 +12,38 @@
                 <th>Driver</th>
                 <th>Car</th>
                 <th>Pos</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody id="tbody-results"></tbody>
         </table>
     </div>
+</template>
+
+<template id="tmpl-add-result">
+    <h2 id="result-form-title" class="mb-3">Add Race Result</h2>
+    <form id="form-add-result" class="mw-600">
+
+        <label class="form-label">Race:</label>
+        <select id="select-result-race" class="form-select mb-2">
+            <option value="">Loading races...</option>
+        </select>
+
+        <label class="form-label">Driver:</label>
+        <select id="select-result-driver" class="form-select mb-2">
+            <option value="">Loading drivers...</option>
+        </select>
+
+        <div class="col">
+            <label class="form-label">Position:</label>
+            <input type="number" id="input-result-pos" class="form-control" placeholder="Empty = DNF">
+        </div>
+        <div class="col">
+            <label class="form-label">Car Model:</label>
+            <input type="text" id="input-result-car" class="form-control">
+        </div>
+
+        <button type="submit" id="btn-result-submit" class="btn btn-primary">Save Result</button>
+        <button type="button" id="btn-cancel-result" class="btn btn-secondary">Cancel</button>
+    </form>
 </template>

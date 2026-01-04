@@ -1,11 +1,11 @@
-// --- STATE ---
+// State
 export let currentUser = null;
 
 export function setCurrentUser(user) {
     currentUser = user;
 }
 
-// --- UI HELPERS ---
+// UI helpers
 export const appContainer = document.getElementById('app-container');
 const errorBox = document.getElementById('error');
 

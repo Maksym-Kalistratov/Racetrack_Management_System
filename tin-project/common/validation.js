@@ -97,7 +97,6 @@ export function validateResult(raceIdRaw, driverIdRaw, finishPosRaw, carModelRaw
 
     const raceId = Number(raceIdRaw);
     const driverId = Number(driverIdRaw);
-    const finishPos = Number(finishPosRaw);
     const carModel = (carModelRaw || '').toString().trim();
 
     if (!raceId || Number.isNaN(raceId) || raceId <= 0) {
@@ -108,8 +107,11 @@ export function validateResult(raceIdRaw, driverIdRaw, finishPosRaw, carModelRaw
         errors.push('Error: Invalid Driver ID selected.');
     }
 
-    if (!finishPos || Number.isNaN(finishPos) || finishPos <= 0) {
-        errors.push('Error: Finish position must be a positive number.');
+    if (finishPosRaw !== "" && finishPosRaw !== null && finishPosRaw !== undefined) {
+        const finishPos = Number(finishPosRaw);
+        if (!Number.isInteger(finishPos) || finishPos <= 0) {
+            errors.push("Error: Finish position must be a positive integer (or leave empty for DNF).");
+        }
     }
 
     if (!carModel) {

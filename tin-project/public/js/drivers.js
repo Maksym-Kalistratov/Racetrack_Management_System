@@ -46,28 +46,28 @@ function renderDriversRow(row) {
         <td><strong>${row.full_name}</strong></td>
         <td>${row.nationality}</td>
         <td>${row.license_number}</td>
-        <td style="color:${statusColor}">${statusText}</td>
+        <td style='color:${statusColor}'>${statusText}</td>
     `;
 
     if (currentUser && currentUser.role === 'admin') {
         html += `
             <td>
-                <button class="btn btn-sm btn-warning me-1 btn-edit" 
-                    data-id="${row.id}"
-                    data-name="${row.full_name}"
-                    data-nation="${row.nationality}"
-                    data-license="${row.license_number}"
-                    data-active="${row.is_active ? '1' : '0'}">
+                <button class='btn btn-warning me-1 btn-edit' 
+                    data-id='${row.id}'
+                    data-name='${row.full_name}'
+                    data-nation='${row.nationality}'
+                    data-license='${row.license_number}'
+                    data-active='${row.is_active ? '1' : '0'}'>
                     ✏️
                 </button>
-                <button class="btn btn-sm btn-danger btn-delete" 
-                    data-id="${row.id}">
+                <button class='btn btn-danger btn-delete' 
+                    data-id='${row.id}'>
                     🗑️
                 </button>
             </td>
         `;
     } else {
-        html += `<td>-</td>`;
+        html += '<td>-</td>';
     }
 
     return html;
@@ -98,7 +98,7 @@ function renderDriverForm(driverData = null) {
     } else {
         title.textContent = 'Add New Driver';
         btnSubmit.textContent = 'Create Driver';
-        inputActive.value = "1";
+        inputActive.value = '1';
     }
 
     btnCancel.addEventListener('click', renderDrivers);
@@ -159,7 +159,7 @@ async function handleDriverFormSubmit(id = null) {
 }
 
 async function handleDelete(id) {
-    if (!confirm("Are you sure you want to delete this driver?")) {
+    if (!confirm('Are you sure you want to delete this driver?')) {
         return;
     }
     try {

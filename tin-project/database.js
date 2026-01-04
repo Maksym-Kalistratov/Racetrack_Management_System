@@ -71,15 +71,17 @@ function deleteDriver(id) {
 
 function getAllResults() {
     const sql = `
-        SELECT r.track_name,
-               r.race_date,
-               r.weather_forecast,
-               d.full_name,
-               rr.finish_position,
-               rr.car_model
-        FROM races r
-                 JOIN race_results rr ON r.id = rr.race_id
-                 JOIN drivers d ON d.id = rr.driver_id
+        SELECT
+            rr.race_id,
+            rr.driver_id,
+            rr.finish_position,
+            rr.car_model,
+            r.track_name,
+            r.race_date,
+            d.full_name
+        FROM race_results rr
+                 JOIN races r ON rr.race_id = r.id
+                 JOIN drivers d ON rr.driver_id = d.id
         ORDER BY r.race_date DESC, rr.finish_position ASC
     `;
     return query(sql);
