@@ -46,14 +46,9 @@ function getAllDrivers() {
     return query('SELECT * FROM drivers ORDER BY full_name ASC');
 }
 
-function getDriverById(id) {
-    return get('SELECT * FROM drivers WHERE id = ?',
+function driverExistsById(id) {
+    return get('SELECT id FROM drivers WHERE id = ?',
         [id]);
-}
-
-function getDriverByFullName(fullName) {
-    return get('SELECT * FROM drivers WHERE full_name = ?',
-        [fullName]);
 }
 
 function createDriver(fullName, nationality, licenseNumber, isActive) {
@@ -93,6 +88,11 @@ function getAllResults() {
 
 function getAllRaces() {
     return query('SELECT * FROM races ORDER BY race_date DESC');
+}
+
+function raceExistsById(id) {
+    return get('SELECT id FROM races WHERE id = ?',
+        [id]);
 }
 
 function createRace(trackName, raceDate, distance, weather) {
@@ -199,21 +199,25 @@ module.exports = {
     db,
     initializeDatabase,
     closeDatabase,
+
     getAllDrivers,
-    getDriverById,
-    getDriverByFullName,
     createDriver,
     updateDriver,
     deleteDriver,
+    driverExistsById,
+
     getAllResults,
-    createRace,
+
     createUser,
     findUserByUsername,
     getSession,
     saveSession,
     destroySession,
     getRoleByName,
+
     getAllRaces,
+    createRace,
     updateRace,
+    raceExistsById,
     deleteRace
 };
