@@ -23,3 +23,5 @@ VALUES (3, 1, NULL, 'Red Bull RB20'),
        (3, 2, NULL, 'Mercedes W15');
 
 INSERT INTO roles (name) VALUES ('admin'), ('user'), ('guest');
+
+INSERT INTO users (username, password_hash, role_id) VALUES ('admin', '$2b$10$l.E7hrFw7XCk8xNVZwD4uOHrw.Cl284HJLX3wlXnqKp3BWmg7E0cy', 1)

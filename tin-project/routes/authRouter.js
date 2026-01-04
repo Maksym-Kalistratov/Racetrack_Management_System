@@ -15,6 +15,11 @@ router.post('/register', async (req, res) => {
     }
 
     try {
+        const existingUser = await dbModule.findUserByUsername(username);
+        if (existingUser) {
+            return res.status(400).json({error: "Username already exists"});
+        }
+
         const hash = await bcrypt.hash(password, 10);
 
         const role = await dbModule.getRoleByName('user');
@@ -23,7 +28,7 @@ router.post('/register', async (req, res) => {
 
         res.json({success: true, message: "User created"});
     } catch (err) {
-        res.status(500).json({error: "Username already exists"});
+        res.status(500).json({error: "Server error"});
     }
 });
 

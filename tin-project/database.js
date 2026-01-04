@@ -8,8 +8,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         return console.error(err.message);
     }
-    console.log(`Connected to the SQLite database at ${dbPath}`);
+    console.log('Connected to the SQLite database at ' + dbPath);
 });
+
+// Helpers
 
 function query(sql, params = []) {
     return new Promise((resolve, reject) => {
@@ -38,13 +40,38 @@ function get(sql, params = []) {
     });
 }
 
+// Drivers
+
 function getAllDrivers() {
-    return query("SELECT * FROM drivers ORDER BY full_name ASC");
+    return query('SELECT * FROM drivers ORDER BY full_name ASC');
 }
 
-function getAllRaces() {
-    return query("SELECT * FROM races ORDER BY race_date DESC");
+function getDriverById(id) {
+    return get('SELECT * FROM drivers WHERE id = ?',
+        [id]);
 }
+
+function getDriverByFullName(fullName) {
+    return get('SELECT * FROM drivers WHERE full_name = ?',
+        [fullName]);
+}
+
+function createDriver(fullName, nationality, licenseNumber, isActive) {
+    return run('INSERT INTO drivers (full_name, nationality, license_number, is_active) VALUES (?, ?, ?, ?)',
+        [fullName, nationality, licenseNumber, isActive]);
+}
+
+function updateDriver(id, fullName, nationality, licenseNumber, isActive) {
+    return run('UPDATE drivers SET full_name = ?, nationality = ?, license_number = ?, is_active = ? WHERE id = ?',
+        [fullName, nationality, licenseNumber, isActive, id]);
+}
+
+function deleteDriver(id) {
+    return run('DELETE FROM drivers WHERE id = ?',
+        [id]);
+}
+
+// Results
 
 function getAllResults() {
     const sql = `
@@ -62,27 +89,64 @@ function getAllResults() {
     return query(sql);
 }
 
+// Races
+
+function getAllRaces() {
+    return query('SELECT * FROM races ORDER BY race_date DESC');
+}
+
 function createRace(trackName, raceDate, distance, weather) {
-    const sql = `
-        INSERT INTO races (track_name, race_date, distance_km, weather_forecast)
-        VALUES (?, ?, ?, ?)
-    `;
-    return run(sql, [trackName, raceDate, distance, weather]);
+    return run('INSERT INTO races (track_name, race_date, distance_km, weather_forecast) VALUES (?, ?, ?, ?)',
+        [trackName, raceDate, distance, weather]);
 }
 
 function updateRace(id, trackName, raceDate, distance, weather) {
-    const sql = `
-        UPDATE races 
-        SET track_name = ?, race_date = ?, distance_km = ?, weather_forecast = ?
-        WHERE id = ?
-    `;
-    return run(sql, [trackName, raceDate, distance, weather, id]);
+    return run('UPDATE races SET track_name = ?, race_date = ?, distance_km = ?, weather_forecast = ? WHERE id = ?',
+        [trackName, raceDate, distance, weather, id]);
 }
 
 function deleteRace(id) {
-    const sql = `DELETE FROM races WHERE id = ?`;
-    return run(sql, [id]);
+    return run('DELETE FROM races WHERE id = ?',
+        [id]);
 }
+
+// Users & Auth
+
+function getRoleByName(name) {
+    return get('SELECT id FROM roles WHERE name = ?',
+        [name]);
+}
+
+function createUser(username, passwordHash, roleId) {
+    return run('INSERT INTO users (username, password_hash, role_id) VALUES (?, ?, ?)',
+        [username, passwordHash, roleId]);
+}
+
+function findUserByUsername(username) {
+    return get('SELECT u.*, r.name as role_name FROM users u LEFT JOIN roles r ON u.role_id = r.id WHERE u.username = ?',
+        [username]);
+}
+
+// Sessions
+
+async function getSession(sid) {
+    const row = await get('SELECT sess FROM sessions WHERE sid = ?',
+        [sid]);
+    return row ? JSON.parse(row.sess) : null;
+}
+
+function saveSession(sid, sessData) {
+    const sessString = JSON.stringify(sessData);
+    return run('INSERT OR REPLACE INTO sessions (sid, sess) VALUES (?, ?)',
+        [sid, sessString]);
+}
+
+function destroySession(sid) {
+    return run('DELETE FROM sessions WHERE sid = ?',
+        [sid]);
+}
+
+// System
 
 function initializeDatabase() {
     const schemaPath = path.join(__dirname, 'sql', 'db_schema.sql');
@@ -92,19 +156,18 @@ function initializeDatabase() {
     const seedSql = fs.readFileSync(seedPath, 'utf8');
 
     db.serialize(() => {
-
         console.log('Checking/Creating tables...');
         db.exec(schemaSql, (err) => {
             if (err) {
-                console.error("Error creating tables:", err.message);
+                console.error('Error creating tables:', err.message);
             } else {
-                console.log("Tables initialized.");
+                console.log('Tables initialized.');
             }
         });
 
-        db.get("SELECT count(*) as count FROM drivers", (err, row) => {
+        db.get('SELECT count(*) as count FROM drivers', (err, row) => {
             if (err) {
-                console.error("Error checking data:", err.message);
+                console.error('Error checking data:', err.message);
                 return;
             }
 
@@ -112,7 +175,7 @@ function initializeDatabase() {
                 console.log('Database is empty. Populating with sample data...');
                 db.exec(seedSql, (err) => {
                     if (err) {
-                        return console.error("Error inserting sample data:", err.message);
+                        return console.error('Error inserting sample data:', err.message);
                     }
                     console.log('Sample data inserted');
                 });
@@ -132,49 +195,16 @@ function closeDatabase() {
     });
 }
 
-function getRoleByName(name) {
-    return get("SELECT id FROM roles WHERE name = ?", [name]);
-}
-
-function createUser(username, passwordHash, roleId) {
-    const sql = `INSERT INTO users (username, password_hash, role_id)
-                 VALUES (?, ?, ?)`;
-    return run(sql, [username, passwordHash, roleId]);
-}
-
-function findUserByUsername(username) {
-    const sql = `
-        SELECT u.*, r.name as role_name
-        FROM users u
-                 LEFT JOIN roles r ON u.role_id = r.id
-        WHERE u.username = ?
-    `;
-    return get(sql, [username]);
-}
-
-async function getSession(sid) {
-    const row = await get("SELECT sess FROM sessions WHERE sid = ?", [sid]);
-    return row ? JSON.parse(row.sess) : null;
-}
-
-function saveSession(sid, sessData) {
-    const sessString = JSON.stringify(sessData);
-    const sql = `INSERT
-    OR REPLACE INTO sessions (sid, sess) VALUES (?, ?)`;
-    return run(sql, [sid, sessString]);
-}
-
-function destroySession(sid) {
-    return run("DELETE FROM sessions WHERE sid = ?", [sid]);
-}
-
-
 module.exports = {
     db,
     initializeDatabase,
     closeDatabase,
     getAllDrivers,
-    getAllRaces,
+    getDriverById,
+    getDriverByFullName,
+    createDriver,
+    updateDriver,
+    deleteDriver,
     getAllResults,
     createRace,
     createUser,
@@ -183,6 +213,7 @@ module.exports = {
     saveSession,
     destroySession,
     getRoleByName,
+    getAllRaces,
     updateRace,
     deleteRace
 };

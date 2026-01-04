@@ -1,5 +1,9 @@
 <template id="tmpl-drivers">
-    <h2 class="mb-3">Drivers List</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Drivers List</h2>
+        <button id="btn-open-add-driver" class="btn btn-success">➕ Add Driver</button>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead class="table-light">
@@ -9,9 +13,39 @@
                 <th>Nationality</th>
                 <th>License</th>
                 <th>Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody id="tbody-drivers"></tbody>
         </table>
     </div>
+</template>
+
+<template id="tmpl-add-driver">
+    <h2 id="driver-form-title" class="mb-3">Add New Driver</h2>
+    <form id="form-add-driver" class="mw-600">
+
+        <label class="form-label">Full Name:</label>
+        <input type="text" id="input-driver-name" class="form-control mb-2">
+
+        <div class="row mb-2">
+            <div class="col">
+                <label class="form-label">Nationality:</label>
+                <input type="text" id="input-driver-nation" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">License Number:</label>
+                <input type="text" id="input-driver-license" class="form-control">
+            </div>
+        </div>
+
+        <label class="form-label">Status:</label>
+        <select id="input-driver-active" class="form-select mb-3">
+            <option value="1">Active</option>
+            <option value="0">Retired / Inactive</option>
+        </select>
+
+        <button type="submit" id="btn-driver-submit" class="btn btn-primary">Save Driver</button>
+        <button type="button" id="btn-cancel-driver" class="btn btn-secondary">Cancel</button>
+    </form>
 </template>
