@@ -114,6 +114,15 @@ function getAllRaces() {
     return query('SELECT * FROM races ORDER BY race_date DESC');
 }
 
+function getPaginatedRaces(limit, offset) {
+    return query('SELECT * FROM races ORDER BY race_date DESC LIMIT ? OFFSET ?',
+        [limit, offset]);
+}
+
+function getTotalRacesCount() {
+    return get('SELECT COUNT(*) as count FROM races');
+}
+
 async function raceExistsById(id) {
     const result = await get('SELECT 1 FROM races WHERE id = ?',
         [id])
@@ -245,6 +254,8 @@ module.exports = {
     getRoleByName,
 
     getAllRaces,
+    getPaginatedRaces,
+    getTotalRacesCount,
     createRace,
     updateRace,
     raceExistsById,

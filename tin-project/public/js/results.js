@@ -83,7 +83,7 @@ async function renderResultForm(data = null) {
     const inputPos = document.getElementById('input-result-pos');
     const inputCar = document.getElementById('input-result-car');
 
-    await loadSelectOptions('/api/races', selectRace, 'id', 'track_name', data ? data.race_id : null);
+    await loadSelectOptions('/api/races/all', selectRace, 'id', 'track_name', data ? data.race_id : null);
     await loadSelectOptions('/api/drivers', selectDriver, 'id', 'full_name', data ? data.driver_id : null);
 
     if (data) {
@@ -134,7 +134,7 @@ async function loadSelectOptions(url, selectElement, valueKey, textKey, selected
             selectElement.appendChild(option);
         });
     } catch (e) {
-        console.error("Error loading options", e);
+        console.error('Error loading options', e);
         selectElement.innerHTML = '<option>Error loading data</option>';
     }
 }
@@ -154,7 +154,7 @@ async function handleResultFormSubmit(originalData = null) {
     const payload = {
         race_id: raceId,
         driver_id: driverId,
-        finish_position: posVal === "" ? null : Number(posVal),
+        finish_position: posVal === '' ? null : Number(posVal),
         car_model: carVal
     };
 

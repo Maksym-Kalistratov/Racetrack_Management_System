@@ -3,6 +3,7 @@
         <h2>Races Schedule</h2>
         <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
     </div>
+
     <div class="table-responsive">
         <table class="table table-hover">
             <thead class="table-primary">
@@ -17,6 +18,20 @@
             <tbody id="tbody-races"></tbody>
         </table>
     </div>
+
+    <nav class="d-flex justify-content-center mt-3">
+        <ul class="pagination" id="races-pagination">
+            <li class="page-item">
+                <button class="page-link page-prev">Previous</button>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link page-info">Page 1 of 1</span>
+            </li>
+            <li class="page-item">
+                <button class="page-link page-next">Next</button>
+            </li>
+        </ul>
+    </nav>
 </template>
 
 <template id="tmpl-add-race">

@@ -80,11 +80,40 @@ router.delete('/drivers/:id', isAdmin, async (req, res) => {
 
 // Races
 
-router.get('/races', isAuthenticated, async (req, res) => {
+router.get('/races/all', isAuthenticated, async (req, res) => {
     try {
         const rows = await dbModule.getAllRaces();
         res.json(rows);
     } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+});
+
+router.get('/races', isAuthenticated, async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
+
+    try {
+        const [rows, countResult] = await Promise.all([
+            dbModule.getPaginatedRaces(limit, offset),
+            dbModule.getTotalRacesCount()
+        ]);
+
+        const totalItems = countResult.count;
+        const totalPages = Math.ceil(totalItems / limit);
+
+        res.json({
+            data: rows,
+            pagination: {
+                current_page: page,
+                per_page: limit,
+                total_items: totalItems,
+                total_pages: totalPages
+            }
+        });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({error: err.message});
     }
 });

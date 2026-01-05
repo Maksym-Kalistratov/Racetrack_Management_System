@@ -1,12 +1,25 @@
 import {validateRace} from '/common/validation.js';
 import {loadTemplate, displayError, loadData, currentUser} from './core.js';
 
-export async function renderRaces() {
+let currentPage = 1;
+
+export async function renderRaces(page = 1) {
+    currentPage = page;
     displayError('');
+
     loadTemplate('tmpl-races');
 
     const tbody = document.getElementById('tbody-races');
-    await loadData('/api/races', tbody, renderRacesRow);
+    const paginationCotrols = document.getElementById('races-pagination');
+
+    await loadData(
+        '/api/races',
+        tbody,
+        renderRacesRow,
+        paginationCotrols,
+        currentPage,
+        renderRaces
+    );
 
     const btnAdd = document.getElementById('btn-open-add-race');
 
@@ -94,7 +107,7 @@ function renderRaceForm(raceData = null) {
         btnSubmit.textContent = 'Create Race';
     }
 
-    btnCancel.addEventListener('click', renderRaces);
+    btnCancel.addEventListener('click', () => renderRaces(currentPage));
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -141,7 +154,7 @@ async function handleRaceFormSubmit(id = null) {
 
         if (response.ok) {
             alert(id ? 'Race updated successfully!' : 'Race created successfully!');
-            await renderRaces();
+            await renderRaces(id ? currentPage : 1);
         } else {
             displayError(result.error || 'Operation failed');
         }
@@ -160,7 +173,7 @@ async function handleDelete(id) {
         const result = await response.json();
 
         if (response.ok) {
-            await renderRaces();
+            await renderRaces(currentPage);
         } else {
             displayError(result.error || 'Failed to delete race');
         }
