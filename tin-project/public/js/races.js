@@ -107,7 +107,7 @@ function renderRaceForm(raceData = null) {
         btnSubmit.textContent = 'Create Race';
     }
 
-    btnCancel.addEventListener('click', () => renderRaces(currentPage));
+    btnCancel.addEventListener('click', () => renderRaces());
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -154,7 +154,7 @@ async function handleRaceFormSubmit(id = null) {
 
         if (response.ok) {
             alert(id ? 'Race updated successfully!' : 'Race created successfully!');
-            await renderRaces(id ? currentPage : 1);
+            await renderRaces();
         } else {
             displayError(result.error || 'Operation failed');
         }
@@ -173,7 +173,7 @@ async function handleDelete(id) {
         const result = await response.json();
 
         if (response.ok) {
-            await renderRaces(currentPage);
+            await renderRaces();
         } else {
             displayError(result.error || 'Failed to delete race');
         }

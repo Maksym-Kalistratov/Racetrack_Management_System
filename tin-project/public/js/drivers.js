@@ -114,7 +114,7 @@ function renderDriverForm(driverData = null) {
         inputActive.value = '1';
     }
 
-    btnCancel.addEventListener('click', () => renderDrivers(currentPage));
+    btnCancel.addEventListener('click', () => renderDrivers());
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -161,7 +161,7 @@ async function handleDriverFormSubmit(id = null) {
 
         if (response.ok) {
             alert(id ? 'Driver updated successfully!' : 'Driver created successfully!');
-            await renderDrivers(id ? currentPage : 1);
+            await renderDrivers();
         } else {
             displayError(result.error || 'Operation failed');
         }
@@ -180,7 +180,7 @@ async function handleDelete(id) {
         const result = await response.json();
 
         if (response.ok) {
-            await renderDrivers(currentPage);
+            await renderDrivers();
         } else {
             displayError(result.error || 'Failed to delete driver');
         }

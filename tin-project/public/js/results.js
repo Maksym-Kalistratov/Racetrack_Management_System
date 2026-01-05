@@ -1,11 +1,24 @@
 import { validateResult } from '/common/validation.js';
 import { loadTemplate, displayError, loadData, currentUser } from './core.js';
 
-export async function renderResults() {
+let currentPage = 1;
+
+export async function renderResults(page = null) {
+    if (page) currentPage = page;
+
     displayError('');
     loadTemplate('tmpl-results');
     const tbody = document.getElementById('tbody-results');
-    await loadData('/api/results', tbody, renderResultsRow);
+    const paginationCotrols = document.getElementById('results-pagination');
+
+    await loadData(
+        '/api/results',
+        tbody,
+        renderResultsRow,
+        paginationCotrols,
+        currentPage,
+        renderResults
+    );
 
     const btnAdd = document.getElementById('btn-open-add-result');
 
@@ -100,7 +113,7 @@ async function renderResultForm(data = null) {
         btnSubmit.textContent = 'Save Result';
     }
 
-    btnCancel.addEventListener('click', renderResults);
+    btnCancel.addEventListener('click', () => renderResults());
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();

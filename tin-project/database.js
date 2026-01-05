@@ -96,6 +96,29 @@ function getAllResults() {
     return query(sql);
 }
 
+function getPaginatedResults(limit, offset) {
+    const sql = `
+        SELECT
+            rr.race_id,
+            rr.driver_id,
+            rr.finish_position,
+            rr.car_model,
+            r.track_name,
+            r.race_date,
+            d.full_name
+        FROM race_results rr
+        JOIN races r ON rr.race_id = r.id
+        JOIN drivers d ON rr.driver_id = d.id
+        ORDER BY r.race_date DESC, rr.finish_position ASC
+        LIMIT ? OFFSET ?
+    `
+    return query(sql, [limit, offset]);
+}
+
+function getTotalResultsCount() {
+    return get('SELECT COUNT(*) as count FROM race_results');
+}
+
 function createResult(raceId, driverId, finishPosition, carModel) {
     return run('INSERT INTO race_results (race_id, driver_id, finish_position, car_model) VALUES (?, ?, ?, ?)',
         [raceId, driverId, finishPosition, carModel]);
@@ -252,6 +275,8 @@ module.exports = {
     driverExistsById,
 
     getAllResults,
+    getPaginatedResults,
+    getTotalResultsCount,
     createResult,
     updateResult,
     deleteResult,

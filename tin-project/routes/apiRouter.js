@@ -216,10 +216,30 @@ router.delete('/races/:id', isAdmin, async (req, res) => {
 // Results
 
 router.get('/results', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
+
     try {
-        const rows = await dbModule.getAllResults();
-        res.json(rows);
+        const [rows, countResult] = await Promise.all([
+            dbModule.getPaginatedResults(limit, offset),
+            dbModule.getTotalResultsCount()
+        ]);
+
+        const totalItems = countResult.count;
+        const totalPages = Math.ceil(totalItems / limit);
+
+        res.json({
+            data: rows,
+            pagination: {
+                current_page: page,
+                per_page: limit,
+                total_items: totalItems,
+                total_pages: totalPages
+            }
+        });
     } catch (err) {
+        console.error(err);
         res.status(500).json({error: err.message});
     }
 });
