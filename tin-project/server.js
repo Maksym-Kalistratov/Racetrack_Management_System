@@ -15,7 +15,7 @@ dbModule.initializeDatabase();
 
 app.use(session({
     store: new MySqliteStore(),
-    secret: 'Hello_world!§',
+    secret: process.env.SESSION_SECRET || 'default_secret_key',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -40,6 +40,11 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Racetrack App running on http://localhost:${port}`);
+});
+
+app.use((err, req, res, next) => {
+    res.status(500).json({error: err.message});
+    console.error(err);
 });
 
 process.on('SIGINT', () => {
