@@ -46,6 +46,15 @@ function getAllDrivers() {
     return query('SELECT * FROM drivers ORDER BY full_name ASC');
 }
 
+function getPaginatedDrivers(limit, offset) {
+    return query('SELECT * FROM drivers ORDER BY full_name ASC LIMIT ? OFFSET ?',
+        [limit, offset]);
+}
+
+function getTotalDriversCount() {
+    return get('SELECT COUNT(*) as count FROM drivers');
+}
+
 async function driverExistsById(id) {
     const result = await get('SELECT 1 FROM drivers WHERE id = ?',
         [id]);
@@ -235,6 +244,8 @@ module.exports = {
     closeDatabase,
 
     getAllDrivers,
+    getPaginatedDrivers,
+    getTotalDriversCount,
     createDriver,
     updateDriver,
     deleteDriver,

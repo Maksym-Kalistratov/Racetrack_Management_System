@@ -3,8 +3,8 @@ import {loadTemplate, displayError, loadData, currentUser} from './core.js';
 
 let currentPage = 1;
 
-export async function renderRaces(page = 1) {
-    currentPage = page;
+export async function renderRaces(page = null) {
+    if (page) currentPage = page;
     displayError('');
 
     loadTemplate('tmpl-races');

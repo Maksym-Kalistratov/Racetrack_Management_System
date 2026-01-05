@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnDrivers = document.getElementById('btn-drivers');
     const btnRaces = document.getElementById('btn-races');
 
-    if (btnResults) btnResults.addEventListener('click', renderResults);
-    if (btnDrivers) btnDrivers.addEventListener('click', renderDrivers);
-    if (btnRaces) btnRaces.addEventListener('click', renderRaces);
+    if (btnResults) btnResults.addEventListener('click', () => renderResults());
+    if (btnDrivers) btnDrivers.addEventListener('click', () => renderDrivers());
+    if (btnRaces) btnRaces.addEventListener('click', () => renderRaces());
 
     await checkAuth();
     await renderResults();

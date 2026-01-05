@@ -1,11 +1,24 @@
 import {validateDriver} from '/common/validation.js';
 import {loadTemplate, displayError, loadData, currentUser} from './core.js';
 
-export async function renderDrivers() {
+let currentPage = 1;
+
+export async function renderDrivers(page = null) {
+    if (page) currentPage = page;
+
     displayError('');
     loadTemplate('tmpl-drivers');
     const tbody = document.getElementById('tbody-drivers');
-    await loadData('/api/drivers', tbody, renderDriversRow);
+    const paginationCotrols = document.getElementById('drivers-pagination');
+
+    await loadData(
+        '/api/drivers',
+        tbody,
+        renderDriversRow,
+        paginationCotrols,
+        currentPage,
+        renderDrivers
+    );
 
     const btnAdd = document.getElementById('btn-open-add-driver');
 
@@ -101,7 +114,7 @@ function renderDriverForm(driverData = null) {
         inputActive.value = '1';
     }
 
-    btnCancel.addEventListener('click', renderDrivers);
+    btnCancel.addEventListener('click', () => renderDrivers(currentPage));
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -148,7 +161,7 @@ async function handleDriverFormSubmit(id = null) {
 
         if (response.ok) {
             alert(id ? 'Driver updated successfully!' : 'Driver created successfully!');
-            await renderDrivers();
+            await renderDrivers(id ? currentPage : 1);
         } else {
             displayError(result.error || 'Operation failed');
         }
@@ -167,7 +180,7 @@ async function handleDelete(id) {
         const result = await response.json();
 
         if (response.ok) {
-            await renderDrivers();
+            await renderDrivers(currentPage);
         } else {
             displayError(result.error || 'Failed to delete driver');
         }

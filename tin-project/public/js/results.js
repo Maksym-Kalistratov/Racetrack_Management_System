@@ -84,7 +84,7 @@ async function renderResultForm(data = null) {
     const inputCar = document.getElementById('input-result-car');
 
     await loadSelectOptions('/api/races/all', selectRace, 'id', 'track_name', data ? data.race_id : null);
-    await loadSelectOptions('/api/drivers', selectDriver, 'id', 'full_name', data ? data.driver_id : null);
+    await loadSelectOptions('/api/drivers/all', selectDriver, 'id', 'full_name', data ? data.driver_id : null);
 
     if (data) {
         title.textContent = 'Edit Result';
