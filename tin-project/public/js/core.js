@@ -3,6 +3,7 @@ export let currentUser = null;
 
 export function setCurrentUser(user) {
     currentUser = user;
+    updateMainMenuVisibility();
 }
 
 // UI helpers
@@ -28,6 +29,19 @@ export function loadTemplate(templateId) {
     }
     const clone = template.content.cloneNode(true);
     appContainer.appendChild(clone);
+}
+
+function updateMainMenuVisibility() {
+    const btnDrivers = document.getElementById('btn-drivers');
+    const btnRaces = document.getElementById('btn-races');
+
+    if (currentUser) {
+        if(btnDrivers) btnDrivers.style.display = 'inline-block';
+        if(btnRaces) btnRaces.style.display = 'inline-block';
+    } else {
+        if(btnDrivers) btnDrivers.style.display = 'none';
+        if(btnRaces) btnRaces.style.display = 'none';
+    }
 }
 
 export async function loadData(url, tbodyElement, renderRowCallback) {

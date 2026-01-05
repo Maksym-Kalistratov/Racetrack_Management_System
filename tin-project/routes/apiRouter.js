@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const dbModule = require('../database');
 const validator = require('../common/validation');
-const {isAdmin} = require('../middleware/checkAuth');
+const {isAdmin, isAuthenticated} = require('../middleware/checkAuth');
 
 // Drivers
 
-router.get('/drivers', async (req, res) => {
+router.get('/drivers', isAuthenticated, async (req, res) => {
     try {
         const rows = await dbModule.getAllDrivers();
         res.json(rows);
@@ -80,7 +80,7 @@ router.delete('/drivers/:id', isAdmin, async (req, res) => {
 
 // Races
 
-router.get('/races', async (req, res) => {
+router.get('/races', isAuthenticated, async (req, res) => {
     try {
         const rows = await dbModule.getAllRaces();
         res.json(rows);
