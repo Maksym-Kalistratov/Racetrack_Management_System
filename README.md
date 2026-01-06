@@ -90,3 +90,4 @@ The default sql/db_schema.sql is written for SQLite. For MySQL, it needs to be m
 MondoDB:
 
 Switching to MongoDB in this case will be difficult since it is designed for NoSQL, which will mean rewriting the entire logic of interaction with the database in the database.js file.
+
