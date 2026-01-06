@@ -10,7 +10,7 @@ The application defaults to ./db/racetrack.db if no configuration is provided. T
 
 2. Add the DB_FILE variable with the relative path to your SQLite file.
 Example .env configuration:
-"DB_FILE=./db/production.db"
+`DB_FILE=./db/production.db`
 
 
 Switching to MySQL
@@ -19,27 +19,27 @@ To use MySQL instead of the default SQLite, follow these steps:
 
 Install the MySQL driver:
 
-"npm install mysql2"
+`npm install mysql2`
 
 Update the .env file: Add MySQL connection details.
 
-DB_HOST=localhost
+`DB_HOST=localhost
 DB_USER=username
 DB_PASS=password
-DB_NAME=racetrack_db
+DB_NAME=racetrack_db`
 
 Update database.js: Replace the SQLite connection logic with the MySQL connection logic.
 
 Replace this (SQLite):
-"
+```
 const sqlite3 = require('sqlite3').verbose();
 const dbPath = path.resolve(__dirname, process.env.DB_FILE || './db/racetrack.db');
 
 const db = new sqlite3.Database(dbPath, (err) => { ... });
-"
+```
 With this (MySQL):
 
-"
+```
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
@@ -53,11 +53,11 @@ db.connect((err) => {
     if (err) return console.error('Error connecting to MySQL:', err.message);
     console.log('Connected to the MySQL database.');
 });
-"
+```
 
 It is also required to slightly adapt the helper functions (query, run, get) to match the mysql2 API. Example:
 SQLite:
-"
+```
 function run(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.run(sql, params, function (err) {
@@ -66,9 +66,9 @@ function run(sql, params = []) {
         });
     });
 }
-"
+```
 MySQL:
-"
+```
 function run(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.query(sql, params, (err, result) => {
@@ -77,7 +77,7 @@ function run(sql, params = []) {
         });
     });
 }
-"
+```
 
 The default sql/db_schema.sql is written for SQLite. For MySQL, it needs to be manually rewriten the SQL syntax:
 
