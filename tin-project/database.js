@@ -2,7 +2,9 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.resolve(__dirname, './db/racetrack.db');
+const dbConfigPath = process.env.DB_FILE || './db/racetrack.db';
+
+const dbPath = path.resolve(__dirname, dbConfigPath);
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {

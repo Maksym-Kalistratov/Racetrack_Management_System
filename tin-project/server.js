@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const path = require("path");
 const session = require('express-session');
@@ -43,8 +45,17 @@ app.listen(port, () => {
 });
 
 app.use((err, req, res, next) => {
-    res.status(500).json({error: err.message});
-    console.error(err);
+    console.error('SERVER ERROR:', err);
+
+    const statusCode = err.status || 500;
+
+    let message = 'Internal Server Error';
+
+    if (statusCode !== 500) {
+        message = err.message;
+    }
+
+    res.status(statusCode).json({ error: message });
 });
 
 process.on('SIGINT', () => {
