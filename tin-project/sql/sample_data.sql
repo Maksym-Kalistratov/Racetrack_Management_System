@@ -1,5 +1,5 @@
 INSERT INTO drivers (full_name, nationality, license_number, is_active)
-VALUES ('Max Speed', 'Netherlands', 'NL-3301', 1),
+VALUES ('Max Verstappen', 'Netherlands', 'NL-3301', 1),
        ('Lewis H.', 'UK', 'UK-4402', 1),
        ('Charles L.', 'Monaco', 'MC-1603', 1),
        ('Old Stig', 'Unknown', 'XX-0000', 0);
