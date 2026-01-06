@@ -1,24 +1,43 @@
 <template id="tmpl-auth">
-    <div class="card mw-400 mx-auto mt-4">
+    <div class="card mx-auto mt-4 shadow-sm" style="max-width: 400px;">
         <div class="card-body">
-            <h2 id="auth-title" class="card-title text-center mb-3"></h2>
+            <h2 id="auth-title" class="card-title text-center mb-4"></h2>
+
             <form id="form-auth">
-                <label class="form-label">Username</label>
-                <input type="text" id="input-auth-user" class="form-control mb-2">
-                <label class="form-label">Password</label>
-                <input type="password" id="input-auth-pass" class="form-control mb-3">
-                <button type="submit" id="btn-auth-submit" class="btn btn-primary w-100"></button>
+                <div class="mb-3">
+                    <label for="input-auth-user" class="form-label">Username</label>
+                    <input type="text"
+                           id="input-auth-user"
+                           name="username"
+                           class="form-control"
+                           >
+                </div>
+
+                <div class="mb-4">
+                    <label for="input-auth-pass" class="form-label">Password</label>
+                    <input type="password"
+                           id="input-auth-pass"
+                           name="password"
+                           class="form-control"
+                           >
+                </div>
+
+                <button type="submit" id="btn-auth-submit" class="btn btn-primary w-100 py-2"></button>
             </form>
         </div>
     </div>
 </template>
 
 <template id="tmpl-nav-guest">
-    <button id="btn-login" class="btn btn-light me-2">🔑 Login</button>
-    <button id="btn-register" class="btn btn-primary">📝 Register</button>
+    <div class="d-flex gap-2">
+        <button id="btn-login" class="btn btn-light text-primary fw-bold">🔑 Login</button>
+        <button id="btn-register" class="btn btn-primary">📝 Register</button>
+    </div>
 </template>
 
 <template id="tmpl-nav-user">
-    <span id="user-display" class="fw-bold me-3 text-secondary"></span>
-    <button id="btn-logout" class="btn btn-outline-danger btn-sm">🚪 Logout</button>
+    <div class="d-flex align-items-center gap-3">
+        <span id="user-display" class="fw-bold text-dark"></span>
+        <button id="btn-logout" class="btn btn-outline-danger btn-sm">🚪 Logout</button>
+    </div>
 </template>

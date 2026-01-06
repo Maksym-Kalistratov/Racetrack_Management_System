@@ -1,11 +1,11 @@
 <template id="tmpl-races">
-    <div class="d-flex justify-content-between mb-3">
-        <h2>Races Schedule</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h3 m-0">Races Schedule</h2>
         <button id="btn-open-add-race" class="btn btn-success">➕ Add Race</button>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-hover align-middle">
             <thead class="table-primary">
             <tr>
                 <th>Track</th>
@@ -19,38 +19,40 @@
         </table>
     </div>
 
-    <nav class="d-flex justify-content-center mt-3">
-        <ul class="pagination" id="races-pagination">
-            <li class="page-item">
-                <button class="page-link page-prev">Previous</button>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link page-info">Page 1 of 1</span>
-            </li>
-            <li class="page-item">
-                <button class="page-link page-next">Next</button>
-            </li>
+    <nav class="mt-3">
+        <ul class="pagination justify-content-center" id="races-pagination">
+            <li class="page-item"><button class="page-link page-prev">Previous</button></li>
+            <li class="page-item disabled"><span class="page-link page-info">Page 1 of 1</span></li>
+            <li class="page-item"><button class="page-link page-next">Next</button></li>
         </ul>
     </nav>
 </template>
 
 <template id="tmpl-add-race">
-    <h2 id="race-form-title" class="mb-3">Add New Race</h2>
-    <form id="form-add-race" class="mw-600">
-        <label class="form-label">Track Name:</label>
-        <input type="text" id="input-track" class="form-control mb-2">
-        <div class="row mb-2">
-            <div class="col">
-                <label class="form-label">Date:</label>
+    <h2 id="race-form-title" class="mb-4">Add New Race</h2>
+
+    <form id="form-add-race" style="max-width: 600px;">
+        <div class="mb-3">
+            <label for="input-track" class="form-label">Track Name</label>
+            <input type="text" id="input-track" class="form-control">
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label for="input-date" class="form-label">Date</label>
                 <input type="date" id="input-date" class="form-control">
             </div>
-            <div class="col">
-                <label class="form-label">Distance (km):</label>
-                <input type="number" id="input-distance" step="0.1" class="form-control">
+            <div class="col-md-6">
+                <label for="input-distance" class="form-label">Distance (km)</label>
+                <input type="number" id="input-distance" step="0.001" class="form-control">
             </div>
         </div>
-        <label class="form-label">Weather:</label>
-        <input type="text" id="input-weather" class="form-control mb-3">
+
+        <div class="mb-4">
+            <label for="input-weather" class="form-label">Weather Forecast</label>
+            <input type="text" id="input-weather" class="form-control">
+        </div>
+
         <button type="submit" id="btn-race-submit" class="btn btn-primary">Save Race</button>
         <button type="button" id="btn-cancel-add" class="btn btn-secondary">Cancel</button>
     </form>

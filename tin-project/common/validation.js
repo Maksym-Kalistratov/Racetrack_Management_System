@@ -107,10 +107,10 @@ export function validateResult(raceIdRaw, driverIdRaw, finishPosRaw, carModelRaw
         errors.push('Error: Invalid Driver ID selected.');
     }
 
-    if (finishPosRaw !== "" && finishPosRaw !== null && finishPosRaw !== undefined) {
+    if (finishPosRaw !== '' && finishPosRaw !== null && finishPosRaw !== undefined) {
         const finishPos = Number(finishPosRaw);
         if (!Number.isInteger(finishPos) || finishPos <= 0) {
-            errors.push("Error: Finish position must be a positive integer (or leave empty for DNF).");
+            errors.push('Error: Finish position must be a positive integer (or leave empty for DNF).');
         }
     }
 
