@@ -43,7 +43,7 @@ function get(sql, params = []) {
 // Drivers
 
 function getAllDrivers() {
-    return query('SELECT * FROM drivers ORDER BY full_name ASC');
+    return query('SELECT id, full_name FROM drivers ORDER BY full_name ASC');
 }
 
 function getPaginatedDrivers(limit, offset) {
@@ -77,24 +77,6 @@ function deleteDriver(id) {
 }
 
 // Results
-
-function getAllResults() {
-    const sql = `
-        SELECT
-            rr.race_id,
-            rr.driver_id,
-            rr.finish_position,
-            rr.car_model,
-            r.track_name,
-            r.race_date,
-            d.full_name
-        FROM race_results rr
-                 JOIN races r ON rr.race_id = r.id
-                 JOIN drivers d ON rr.driver_id = d.id
-        ORDER BY r.race_date DESC, rr.finish_position ASC
-    `;
-    return query(sql);
-}
 
 function getPaginatedResults(limit, offset) {
     const sql = `
@@ -143,7 +125,7 @@ async function resultExistsByRaceAndDriver(raceId, driverId) {
 // Races
 
 function getAllRaces() {
-    return query('SELECT * FROM races ORDER BY race_date DESC');
+    return query('SELECT id, track_name, race_date FROM races ORDER BY race_date DESC');
 }
 
 function getPaginatedRaces(limit, offset) {
@@ -274,7 +256,6 @@ module.exports = {
     deleteDriver,
     driverExistsById,
 
-    getAllResults,
     getPaginatedResults,
     getTotalResultsCount,
     createResult,
